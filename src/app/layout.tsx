@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('bg-zinc-700 text-white', GeistSans.className)}>
+      <body className={cn('min-h-screen text-white', GeistSans.className)}>
         {children}
       </body>
     </html>
