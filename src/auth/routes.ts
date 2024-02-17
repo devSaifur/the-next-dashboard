@@ -2,18 +2,18 @@
  * Routes that are available for everyone, and doesn't require authentication
  * @type {string[]}
  *  */
-export const publicRoutes: string[] = ['/', '/auth/new-verification']
+export const publicRoutes: string[] = ['/', '/new-verification']
 
 /**
- * Routes that are used for authentication, those routes will redirect users to /settings
+ * Routes that are used for authentication, those routes will redirect users to /
  * @type {string[]}
  * */
 export const authRoutes: string[] = [
-  '/auth/sign-in',
-  '/auth/sign-up',
-  '/auth/error',
-  '/auth/reset',
-  '/auth/new-password',
+  '/sign-in',
+  '/sign-up',
+  '/error',
+  '/reset',
+  '/new-password',
 ]
 
 /** 
@@ -26,4 +26,4 @@ export const apiAuthPrefix: string = '/api/auth'
 /**  The default redirect path after logging in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT: string = '/settings'
+export const DEFAULT_LOGIN_REDIRECT: string = '/'

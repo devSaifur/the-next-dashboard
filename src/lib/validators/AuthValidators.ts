@@ -16,7 +16,7 @@ export const SignInValidator = z.object({
   email: z.string().email({
     message: 'Invalid email address!',
   }),
-  password: z.string().min(6, { message: 'Password is required' }),
+  password: z.string().min(6, { message: 'Invalid password' }),
 })
 
 export type TSignInValidator = z.infer<typeof SignInValidator>
