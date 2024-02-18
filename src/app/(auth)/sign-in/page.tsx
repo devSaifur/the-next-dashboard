@@ -16,16 +16,16 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import { login } from '@/actions/auth'
+import { login } from '@/actions/authActions'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { FormStateMessage } from '@/components/auth/form-action-message'
 import { cn } from '@/lib/utils'
+import { Icons } from '@/components/icons'
 
 const SignInPage = () => {
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
   const form = useForm<TSignInValidator>({
     resolver: zodResolver(SignInValidator),
     defaultValues: {
@@ -38,14 +38,11 @@ const SignInPage = () => {
 
   const { execute, status } = useAction(login, {
     onSuccess(data) {
-      if (data.error) setError(data.error)
-
-      if (data.success) {
-        setSuccess(data.success)
-        form.reset()
-      }
+      if (data?.error) setError(data.error)
     },
   })
+
+  const isSubmitting = status === 'executing'
 
   function onSubmit(values: TSignInValidator) {
     execute(values)
@@ -57,7 +54,7 @@ const SignInPage = () => {
       headerLabel="Enter your email below to log in."
       showSocial
       backButtonLabel="Don't have an account?"
-      backButtonHref="/sign-in"
+      backButtonHref="/sign-up"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -108,16 +105,10 @@ const SignInPage = () => {
               </FormItem>
             )}
           />
-          <FormStateMessage
-            type={error ? 'error' : 'success'}
-            message={success || error}
-          />
+          <FormStateMessage type="error" message={error} />
 
-          <Button
-            type="submit"
-            disabled={status === 'executing'}
-            className="w-full"
-          >
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting && <Icons.spinner className="h-4 w-4 animate-spin" />}
             Sign in to your account
           </Button>
         </form>

@@ -1,21 +1,21 @@
-import { drizzle } from 'drizzle-orm/neon-http'
-import { migrate } from 'drizzle-orm/neon-http/migrator'
-import { neon } from '@neondatabase/serverless'
-
-const sql = neon(process.env.DATABASE_URL!)
-
-const db = drizzle(sql)
+import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import { Pool } from 'pg'
+import { db } from '@/db'
 
 const main = async () => {
+  const poll = new Pool({ connectionString: process.env.DATABASE_URL! })
+
+  console.log('Migration running')
+
   try {
-    await migrate(db, {
-      migrationsFolder: 'src/db/migrations',
-    })
-    console.log('Migration successful')
+    await migrate(db, { migrationsFolder: 'src/db/migrations' })
   } catch (err) {
     console.error(err)
-    process.exit(1)
   }
+
+  console.log('Migration done, exiting...')
+
+  await poll.end()
 }
 
 main()

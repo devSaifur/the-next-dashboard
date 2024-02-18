@@ -9,7 +9,7 @@ import {
   SignUpValidator,
   TSignUpValidator,
 } from '@/lib/validators/AuthValidators'
-import { register } from '@/actions/auth'
+import { register } from '@/actions/authActions'
 import { FormStateMessage } from '@/components/auth/form-action-message'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import {
