@@ -9,7 +9,7 @@ import {
   SignUpValidator,
   TSignUpValidator,
 } from '@/lib/validators/AuthValidators'
-import { register } from '@/actions/authActions'
+import { register } from '@/actions/register'
 import { FormStateMessage } from '@/components/auth/form-action-message'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import {
@@ -23,10 +23,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export default function AuthenticationPage() {
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const form = useForm<TSignUpValidator>({
     resolver: zodResolver(SignUpValidator),
@@ -42,11 +42,7 @@ export default function AuthenticationPage() {
   const { execute, status } = useAction(register, {
     onSuccess(data) {
       if (data.error) setError(data.error)
-
-      if (data.success) {
-        setSuccess(data.success)
-        form.reset()
-      }
+      if (!data.error) toast.success('Signed up successfully')
     },
   })
 
@@ -134,10 +130,7 @@ export default function AuthenticationPage() {
             )}
           />
 
-          <FormStateMessage
-            type={error ? 'error' : 'success'}
-            message={success || error}
-          />
+          <FormStateMessage type="error" message={error} />
 
           <Button type="submit" disabled={isPending} className="w-full">
             Sign up with email

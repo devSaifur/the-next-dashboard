@@ -16,7 +16,7 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import { login } from '@/actions/authActions'
+import { login } from '@/actions/login'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -42,7 +42,7 @@ const SignInPage = () => {
     },
   })
 
-  const isSubmitting = status === 'executing'
+  const isPending = status === 'executing'
 
   function onSubmit(values: TSignInValidator) {
     execute(values)
@@ -107,8 +107,8 @@ const SignInPage = () => {
           />
           <FormStateMessage type="error" message={error} />
 
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting && <Icons.spinner className="h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending && <Icons.spinner className="h-4 w-4 animate-spin" />}
             Sign in to your account
           </Button>
         </form>

@@ -9,7 +9,7 @@ export async function getUserByEmail(email: string) {
     })
     return user
   } catch (err) {
-    if (err instanceof Error) console.log(err.message)
+    if (err instanceof Error) console.error(err.message)
     return null
   }
 }

@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, varchar } from 'drizzle-orm/pg-core'
+import { timestamp, pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('user', {
   id: text('id').primaryKey(),
@@ -19,3 +19,18 @@ export const session = pgTable('session', {
     mode: 'date',
   }).notNull(),
 })
+
+export const stores = pgTable('store', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp('created_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).defaultNow(),
+  updatedAt: timestamp('updated_at').notNull(),
+})
+
+export type Store = typeof stores.$inferInsert
