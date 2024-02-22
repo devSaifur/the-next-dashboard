@@ -1,5 +1,6 @@
-import { Icons } from '../icons'
-import { Button } from '../ui/button'
+import { Icons } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
 
 export const Social = () => {
   const isLoading = false
@@ -8,7 +9,7 @@ export const Social = () => {
     <div className="mx-auto flex items-center">
       <Button variant="outline" type="button" disabled={isLoading}>
         {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <Icons.google className="mr-2 h-4 w-4" />
         )}{' '}
@@ -17,7 +18,7 @@ export const Social = () => {
       <p>or</p>
       <Button variant="outline" type="button" disabled={isLoading}>
         {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <Icons.facebook className="mr-2 h-4 w-4" />
         )}{' '}

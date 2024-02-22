@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import { validateRequest } from '@/auth/auth'
 import { getStoreByUserId } from '@/data/store'
 import { getUser } from '@/hooks/getUser'
 

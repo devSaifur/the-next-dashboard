@@ -35,7 +35,7 @@ interface SettingsFormPage {
   storeId: string
 }
 
-export const SettingsForm = ({ initialData, storeId }: SettingsFormPage) => {
+export const BillboardForm = ({ initialData, storeId }: SettingsFormPage) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 

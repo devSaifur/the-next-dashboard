@@ -18,7 +18,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
 import { createStoreAction } from '@/actions/create-store'
 import { toast } from 'sonner'
-import { revalidatePath } from 'next/cache'
 import { useRouter } from 'next/navigation'
 
 export const StoreModal = () => {

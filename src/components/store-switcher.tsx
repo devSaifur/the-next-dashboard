@@ -2,18 +2,19 @@
 
 import { useState } from 'react'
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import type { Store } from '@/db/schema'
-import { Popover, PopoverTrigger } from '@/components/ui/popover'
-import { useModalStore } from '@/hooks/use-modal-store'
 import {
   Store as StoreIcon,
   Check,
   PlusCircle,
   ChevronsUpDown,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+
+import type { Store } from '@/db/schema'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import { PopoverContent } from '@radix-ui/react-popover'
+import { Popover, PopoverTrigger } from '@/components/ui/popover'
+import { useModalStore } from '@/hooks/use-modal-store'
 import {
   Command,
   CommandGroup,
