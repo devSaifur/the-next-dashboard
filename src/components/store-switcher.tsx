@@ -1,16 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import type { Store } from '@/db/schema'
 import { Popover, PopoverTrigger } from '@/components/ui/popover'
 import { useModalStore } from '@/hooks/use-modal-store'
 import {
-  LuStore,
-  LuCheck,
-  LuPlusCircle,
-  LuChevronsUpDown,
-} from 'react-icons/lu'
+  Store as StoreIcon,
+  Check,
+  PlusCircle,
+  ChevronsUpDown,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { PopoverContent } from '@radix-ui/react-popover'
@@ -37,6 +37,7 @@ export default function StoreSwitcher({
   const [open, setOpen] = useState(false)
   const params = useParams()
   const router = useRouter()
+  const pathname = usePathname()
 
   const { onOpen } = useModalStore()
 
@@ -49,9 +50,15 @@ export default function StoreSwitcher({
     (item) => item.value === params.storeId
   )
 
+  const isOnSettingsPage = pathname.endsWith('/settings')
+
   function onStoreSelect(store: typeof currentStore) {
     setOpen(false)
-    router.push(`/${store?.value}`)
+    if (isOnSettingsPage) {
+      router.push(`/${store?.value}/settings`)
+    } else {
+      router.push(`/${store?.value}`)
+    }
   }
 
   return (
@@ -65,9 +72,9 @@ export default function StoreSwitcher({
           aria-label="Select a store"
           className={cn('w-[200px] justify-between', className)}
         >
-          <LuStore className="mr-2 h-4 w-4" />
+          <StoreIcon className="mr-2 size-4" />
           {currentStore?.label}
-          <LuChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -82,11 +89,11 @@ export default function StoreSwitcher({
                   className="text-sm"
                   key={store.value}
                 >
-                  <LuStore className="mr-2 h-4 w-4" />
+                  <StoreIcon className="mr-2 size-4" />
                   {store.label}
-                  <LuCheck
+                  <Check
                     className={cn(
-                      'ml-auto h-4 w-4',
+                      'ml-auto size-4',
                       currentStore?.value === store.value
                         ? 'opacity-100'
                         : 'opacity-0'
@@ -105,7 +112,7 @@ export default function StoreSwitcher({
                   onOpen()
                 }}
               >
-                <LuPlusCircle className="mr-2 h-5 w-5 cursor-pointer" />
+                <PlusCircle className="mr-2 size-5 cursor-pointer" />
                 Create Store
               </CommandItem>
             </CommandGroup>

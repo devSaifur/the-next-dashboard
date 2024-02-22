@@ -1,48 +1,36 @@
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { stores } from '@/db/schema'
+import { type Store, stores } from '@/db/schema'
 
 export async function getStoreByUserId(userId: string) {
-  try {
-    const store = await db.query.stores.findFirst({
-      where: eq(stores.userId, userId),
-    })
-    return store
-  } catch (err) {
-    if (err instanceof Error) console.error(err.message)
-    console.error(err)
-  }
+  const store = await db.query.stores.findFirst({
+    where: eq(stores.userId, userId),
+  })
+  return store
 }
 
 export async function getStoreByStoreId(storeId: string) {
-  try {
-    const store = await db.query.stores.findFirst({
-      where: eq(stores.id, storeId),
-    })
-    return store
-  } catch (err) {
-    if (err instanceof Error) console.error(err.message)
-    console.error(err)
-  }
+  const store = await db.query.stores.findFirst({
+    where: eq(stores.id, storeId),
+  })
+  return store
 }
 
 export async function getAllStoreByUserId(userId: string) {
-  try {
-    const allStore = await db.query.stores.findMany({
-      where: eq(stores.userId, userId),
-    })
-    return allStore
-  } catch (err) {
-    if (err instanceof Error) console.error(err.message)
-    console.error(err)
-  }
+  const allStore = await db.query.stores.findMany({
+    where: eq(stores.userId, userId),
+  })
+  return allStore
+}
+
+export async function createStore(value: Store) {
+  await db.insert(stores).values(value)
 }
 
 export async function updateStoreName(storeId: string, name: string) {
-  try {
-    await db.update(stores).set({ name }).where(eq(stores.id, storeId))
-  } catch (err) {
-    if (err instanceof Error) console.error(err.message)
-    console.error(err)
-  }
+  await db.update(stores).set({ name }).where(eq(stores.id, storeId))
+}
+
+export async function deleteStore(storeId: string) {
+  await db.delete(stores).where(eq(stores.id, storeId))
 }

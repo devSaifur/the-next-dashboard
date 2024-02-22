@@ -12,7 +12,8 @@ export const lucia = new Lucia(adapter, {
   sessionCookie: {
     // this sets cookies with super long expiration
     // since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
-    expires: false,
+    // by default it's true which is the cookie expires in 30 days by default
+    // expires: false,
     attributes: {
       // set to `true` when using HTTPS
       secure: process.env.NODE_ENV === 'production',

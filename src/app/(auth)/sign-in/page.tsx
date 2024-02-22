@@ -15,12 +15,13 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { login } from '@/actions/login'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { FormStateMessage } from '@/components/auth/form-action-message'
+import { FormActionError } from '@/components/auth/form-action-message'
 import { cn } from '@/lib/utils'
 import { Icons } from '@/components/icons'
 
@@ -74,9 +75,7 @@ const SignInPage = () => {
                     {...field}
                   />
                 </FormControl>
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -97,15 +96,12 @@ const SignInPage = () => {
                     {...field}
                   />
                 </FormControl>
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
-          <FormStateMessage type="error" message={error} />
+
+          <FormActionError message={error} />
 
           <Button type="submit" disabled={isPending} className="w-full">
             {isPending && <Icons.spinner className="h-4 w-4 animate-spin" />}

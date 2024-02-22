@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { LuTrash } from 'react-icons/lu'
+import { TrashIcon } from '@radix-ui/react-icons'
+import { useAction } from 'next-safe-action/hooks'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 import { Store } from '@/db/schema'
 import { Heading } from '@/components/ui/heading'
@@ -22,8 +25,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAction } from 'next-safe-action/hooks'
-import { updateStore } from '@/actions/update-store'
+import { AlertModal } from '@/components/modals/alert-modals'
+
+import { updateStoreAction } from '@/actions/update-store'
+import { deleteStoreAction } from '@/actions/delete-store'
 
 interface SettingsFormPage {
   initialData: Store
@@ -32,6 +37,7 @@ interface SettingsFormPage {
 
 export const SettingsForm = ({ initialData, storeId }: SettingsFormPage) => {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
 
   const form = useForm<TSettingsFormValidator>({
     resolver: zodResolver(SettingsFormValidator),
@@ -41,22 +47,54 @@ export const SettingsForm = ({ initialData, storeId }: SettingsFormPage) => {
     },
   })
 
-  const { execute, status } = useAction(updateStore, {
-    onSuccess(data) {},
-  })
+  const { execute: executeUpdate, status: updateStatus } = useAction(
+    updateStoreAction,
+    {
+      onSuccess(data) {
+        if (data.error) toast.error(data.error)
+        if (data.success) {
+          toast.success(data.success)
+          router.refresh()
+        }
+      },
+    }
+  )
 
-  const isPending = status === 'executing'
+  const { execute: executeDelete, status: deleteStatus } = useAction(
+    deleteStoreAction,
+    {
+      onSuccess(data) {
+        if (data.error) toast.error(data.error)
+        if (data.success) {
+          toast.success(data.success)
+          router.refresh()
+        }
+      },
+    }
+  )
+
+  const isPending = updateStatus === 'executing' || deleteStatus === 'executing'
 
   function onSubmit(values: TSettingsFormValidator) {
-    execute(values)
+    executeUpdate(values)
+  }
+
+  function onDelete() {
+    executeDelete(storeId)
   }
 
   return (
     <>
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={isPending}
+      />
       <div className="flex items-center justify-between">
         <Heading title="Settings" description="Manage store preferences" />
-        <Button variant="destructive" size="icon">
-          <LuTrash />
+        <Button onClick={() => setOpen(true)} variant="destructive" size="icon">
+          <TrashIcon />
         </Button>
       </div>
       <Separator />

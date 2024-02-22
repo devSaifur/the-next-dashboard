@@ -10,7 +10,7 @@ import {
   TSignUpValidator,
 } from '@/lib/validators/AuthValidators'
 import { register } from '@/actions/register'
-import { FormStateMessage } from '@/components/auth/form-action-message'
+import { FormActionError } from '@/components/auth/form-action-message'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import {
   Form,
@@ -78,9 +78,7 @@ export default function AuthenticationPage() {
                     {...field}
                   />
                 </FormControl>
-                {errors.name && (
-                  <FormMessage>{errors.name.message}</FormMessage>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -100,9 +98,7 @@ export default function AuthenticationPage() {
                     {...field}
                   />
                 </FormControl>
-                {errors.email && (
-                  <FormMessage>{errors.email.message}</FormMessage>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -123,14 +119,12 @@ export default function AuthenticationPage() {
                     {...field}
                   />
                 </FormControl>
-                {errors.password && (
-                  <FormMessage> {errors.password.message}</FormMessage>
-                )}
+                <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormStateMessage type="error" message={error} />
+          <FormActionError message={error} />
 
           <Button type="submit" disabled={isPending} className="w-full">
             Sign up with email

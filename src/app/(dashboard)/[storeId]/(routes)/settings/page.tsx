@@ -1,5 +1,5 @@
 import { SettingsForm } from '@/components/settings-form'
-import { getStoreByUserId } from '@/data/store'
+import { getStoreByStoreId } from '@/data/store'
 import { getUser } from '@/hooks/getUser'
 import { redirect } from 'next/navigation'
 
@@ -14,9 +14,7 @@ const SettingsPage = async ({ params }: SettingsPageProps) => {
 
   if (!user) redirect('/sign-in')
 
-  const { userId } = user
-
-  const store = await getStoreByUserId(userId)
+  const store = await getStoreByStoreId(storeId)
 
   if (!store) redirect('/')
 

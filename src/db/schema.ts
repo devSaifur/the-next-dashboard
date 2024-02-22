@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { timestamp, pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('user', {
@@ -34,3 +35,23 @@ export const stores = pgTable('store', {
 })
 
 export type Store = typeof stores.$inferInsert
+
+export const billboards = pgTable('billboard', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  storeId: uuid('storeId').references(() => stores.id),
+  label: varchar('label', { length: 255 }),
+  imageUrl: text('imageUrl'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').notNull(),
+})
+
+export const storesRelations = relations(stores, ({ many }) => ({
+  billboards: many(billboards),
+}))
+
+export const billboardsRelations = relations(billboards, ({ one }) => ({
+  store: one(stores, {
+    fields: [billboards.storeId],
+    references: [stores.id],
+  }),
+}))
