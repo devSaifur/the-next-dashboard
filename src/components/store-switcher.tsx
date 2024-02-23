@@ -9,7 +9,7 @@ import {
   ChevronsUpDown,
 } from 'lucide-react'
 
-import type { Store } from '@/db/schema'
+import type { TStoreInsertSchema } from '@/db/schema'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { PopoverContent } from '@radix-ui/react-popover'
@@ -28,7 +28,7 @@ import {
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface StoreSwitcherProps extends PopoverTriggerProps {
-  items: Store[] | undefined
+  items: TStoreInsertSchema[]
 }
 
 export default function StoreSwitcher({

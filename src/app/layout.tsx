@@ -4,6 +4,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import { ModalProvider } from '@/providers/ModalProvider'
 import { Toaster } from '@/components/ui/sonner'
+import TanstackProvider from '@/providers/TanstackProvider'
 
 export const metadata: Metadata = {
   title: 'The Next Shop',
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn('min-h-screen w-full', GeistSans.className)}>
         <Toaster />
-        <ModalProvider />
-        {children}
+        <TanstackProvider>
+          <ModalProvider />
+          {children}
+        </TanstackProvider>
       </body>
     </html>
   )

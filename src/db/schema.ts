@@ -1,5 +1,7 @@
 import { relations } from 'drizzle-orm'
 import { timestamp, pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import * as z from 'zod'
 
 export const users = pgTable('user', {
   id: text('id').primaryKey(),
@@ -7,8 +9,6 @@ export const users = pgTable('user', {
   email: varchar('email', { length: 255 }),
   password: text('password'),
 })
-
-export type User = typeof users.$inferInsert
 
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
@@ -34,16 +34,24 @@ export const stores = pgTable('store', {
   updatedAt: timestamp('updated_at').notNull(),
 })
 
-export type Store = typeof stores.$inferInsert
+export type TStoreInsertSchema = typeof stores.$inferInsert
+
+export const StoreSelectSchema = createSelectSchema(stores)
+export type TStoreSelectSchema = z.infer<typeof StoreSelectSchema>
 
 export const billboards = pgTable('billboard', {
   id: uuid('id').defaultRandom().primaryKey(),
-  storeId: uuid('storeId').references(() => stores.id),
-  label: varchar('label', { length: 255 }),
-  imageUrl: text('imageUrl'),
+  storeId: uuid('storeId')
+    .references(() => stores.id)
+    .notNull(),
+  label: varchar('label', { length: 255 }).notNull(),
+  imageUrl: text('imageUrl').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').notNull(),
 })
+
+export const BillboardInsertSchema = createInsertSchema(billboards)
+export type TBillboardInsertSchema = z.infer<typeof BillboardInsertSchema>
 
 export const storesRelations = relations(stores, ({ many }) => ({
   billboards: many(billboards),

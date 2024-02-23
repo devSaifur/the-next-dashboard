@@ -4,18 +4,18 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
-import { useAction } from 'next-safe-action/hooks'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useMutation } from '@tanstack/react-query'
 
-import { Store } from '@/db/schema'
+import {
+  StoreUpdateSchema,
+  TStoreUpdateSchema,
+} from '@/lib/validators/ActionValidators'
+import { TStoreInsertSchema } from '@/db/schema'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  SettingsFormValidator,
-  TSettingsFormValidator,
-} from '@/lib/validators/FormValidators'
 import {
   Form,
   FormControl,
@@ -27,60 +27,58 @@ import {
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
 
-import { updateStoreAction } from '@/actions/update-store'
-import { deleteStoreAction } from '@/actions/delete-store'
+import { updateStoreAction } from '@/actions/store-update'
+import { deleteStoreAction } from '@/actions/store-delete'
 
-interface SettingsFormPage {
-  initialData: Store
+interface SettingsFormProps {
+  initialData: TStoreInsertSchema
   storeId: string
 }
 
-export const SettingsForm = ({ initialData, storeId }: SettingsFormPage) => {
+export const SettingsForm = ({ initialData, storeId }: SettingsFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
-  const form = useForm<TSettingsFormValidator>({
-    resolver: zodResolver(SettingsFormValidator),
+  const form = useForm<TStoreUpdateSchema>({
+    resolver: zodResolver(StoreUpdateSchema),
     defaultValues: {
       name: initialData.name,
       storeId,
     },
   })
 
-  const { execute: executeUpdate, status: updateStatus } = useAction(
-    updateStoreAction,
-    {
-      onSuccess(data) {
-        if (data.error) toast.error(data.error)
-        if (data.success) {
-          toast.success(data.success)
-          router.refresh()
-        }
-      },
-    }
-  )
+  const { mutate: updateAction, isPending: isUpdating } = useMutation({
+    mutationFn: updateStoreAction,
+    mutationKey: ['stores'],
+    onSuccess: ({ success, error }) => {
+      if (error) toast.error(error)
+      if (success) {
+        toast.success(success)
+        router.refresh()
+      }
+    },
+  })
 
-  const { execute: executeDelete, status: deleteStatus } = useAction(
-    deleteStoreAction,
-    {
-      onSuccess(data) {
-        if (data.error) toast.error(data.error)
-        if (data.success) {
-          toast.success(data.success)
-          router.refresh()
-        }
-      },
-    }
-  )
+  const { mutate: deleteAction, isPending: isDeleting } = useMutation({
+    mutationFn: deleteStoreAction,
+    mutationKey: ['stores'],
+    onSuccess: ({ success, error }) => {
+      if (error) toast.error(error)
+      if (success) {
+        toast.success(success)
+        router.refresh()
+      }
+    },
+  })
 
-  const isPending = updateStatus === 'executing' || deleteStatus === 'executing'
+  const isPending = isUpdating || isDeleting
 
-  function onSubmit(values: TSettingsFormValidator) {
-    executeUpdate(values)
+  function onSubmit(values: TStoreUpdateSchema) {
+    updateAction(values)
   }
 
   function onDelete() {
-    executeDelete(storeId)
+    deleteAction(storeId)
   }
 
   return (

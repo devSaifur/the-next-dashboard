@@ -4,18 +4,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
-import { useAction } from 'next-safe-action/hooks'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-import { Store } from '@/db/schema'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  SettingsFormValidator,
-  TSettingsFormValidator,
-} from '@/lib/validators/FormValidators'
+import { BillboardInsertSchema, TBillboardInsertSchema } from '@/db/schema'
 import {
   Form,
   FormControl,
@@ -27,61 +22,30 @@ import {
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
 
-import { updateStoreAction } from '@/actions/update-store'
-import { deleteStoreAction } from '@/actions/delete-store'
-
-interface SettingsFormPage {
-  initialData: Store
-  storeId: string
+interface BillboardFormProps {
+  initialData: TBillboardInsertSchema
+  billboardId: string
 }
 
-export const BillboardForm = ({ initialData, storeId }: SettingsFormPage) => {
+export const BillboardForm = ({
+  initialData,
+  billboardId,
+}: BillboardFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
-  const form = useForm<TSettingsFormValidator>({
-    resolver: zodResolver(SettingsFormValidator),
+  const form = useForm<TBillboardInsertSchema>({
+    resolver: zodResolver(BillboardInsertSchema),
     defaultValues: {
-      name: initialData.name,
-      storeId,
+      label: initialData.label,
+      imageUrl: initialData.imageUrl,
+      storeId: billboardId,
     },
   })
 
-  const { execute: executeUpdate, status: updateStatus } = useAction(
-    updateStoreAction,
-    {
-      onSuccess(data) {
-        if (data.error) toast.error(data.error)
-        if (data.success) {
-          toast.success(data.success)
-          router.refresh()
-        }
-      },
-    }
-  )
+  function onSubmit(values: TBillboardInsertSchema) {}
 
-  const { execute: executeDelete, status: deleteStatus } = useAction(
-    deleteStoreAction,
-    {
-      onSuccess(data) {
-        if (data.error) toast.error(data.error)
-        if (data.success) {
-          toast.success(data.success)
-          router.refresh()
-        }
-      },
-    }
-  )
-
-  const isPending = updateStatus === 'executing' || deleteStatus === 'executing'
-
-  function onSubmit(values: TSettingsFormValidator) {
-    executeUpdate(values)
-  }
-
-  function onDelete() {
-    executeDelete(storeId)
-  }
+  function onDelete() {}
 
   return (
     <>
@@ -106,10 +70,10 @@ export const BillboardForm = ({ initialData, storeId }: SettingsFormPage) => {
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="label"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Label</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Store name"

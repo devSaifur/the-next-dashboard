@@ -1,0 +1,1 @@
+ALTER TABLE "billboard" ALTER COLUMN "storeId" SET NOT NULL;

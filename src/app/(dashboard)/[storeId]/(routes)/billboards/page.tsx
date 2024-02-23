@@ -1,4 +1,4 @@
-import { BillboardClient } from '@/components/billboard-client'
+import { BillboardClient } from '@/components/billboards/billboard-client'
 
 export default function BillboardsPage() {
   return (

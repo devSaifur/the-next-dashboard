@@ -18,9 +18,9 @@ export default async function Dashboard({
   if (!store) redirect('/')
 
   return (
-    <main>
+    <>
       <Navbar />
       {children}
-    </main>
+    </>
   )
 }

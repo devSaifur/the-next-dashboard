@@ -1,14 +1,14 @@
 'use server'
 
 import { getUser } from '@/hooks/getUser'
-import { FormValidator } from '@/lib/validators/FormValidators'
+import {
+  TStoreCreateSchema,
+  StoreCreateSchema,
+} from '@/lib/validators/ActionValidators'
 import { createStore } from '@/data/store'
-import { createSafeActionClient } from 'next-safe-action'
 
-const action = createSafeActionClient()
-
-export const createStoreAction = action(FormValidator, async (values) => {
-  const validatedFields = FormValidator.safeParse(values)
+export async function createStoreAction(values: TStoreCreateSchema) {
+  const validatedFields = StoreCreateSchema.safeParse(values)
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields' }
@@ -33,4 +33,4 @@ export const createStoreAction = action(FormValidator, async (values) => {
     if (err instanceof Error) console.error(err.message)
     return { error: 'Something went wrong' }
   }
-})
+}

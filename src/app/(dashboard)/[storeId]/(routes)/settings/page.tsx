@@ -1,5 +1,6 @@
 import { SettingsForm } from '@/components/settings-form'
 import { getStoreByStoreId } from '@/data/store'
+import { db } from '@/db'
 import { getUser } from '@/hooks/getUser'
 import { redirect } from 'next/navigation'
 
@@ -7,7 +8,7 @@ interface SettingsPageProps {
   params: { storeId: string }
 }
 
-const SettingsPage = async ({ params }: SettingsPageProps) => {
+export default async function SettingsPage({ params }: SettingsPageProps) {
   const { storeId } = params
 
   const user = await getUser()
@@ -26,5 +27,3 @@ const SettingsPage = async ({ params }: SettingsPageProps) => {
     </div>
   )
 }
-
-export default SettingsPage

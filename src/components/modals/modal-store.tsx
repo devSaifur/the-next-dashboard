@@ -1,11 +1,12 @@
 'use client'
 
-import { Modal } from '@/components/ui/modal'
-import { useModalStore } from '@/hooks/use-modal-store'
-import { FormValidator, TFormValidator } from '@/lib/validators/FormValidators'
+import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAction } from 'next-safe-action/hooks'
+import { useRouter } from 'next/navigation'
+
+import { Modal } from '@/components/ui/modal'
+import { useModalStore } from '@/hooks/use-modal-store'
 import {
   Form,
   FormControl,
@@ -16,37 +17,39 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { createStoreAction } from '@/actions/create-store'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { createStoreAction } from '@/actions/store-create'
+import {
+  StoreCreateSchema,
+  TStoreCreateSchema,
+} from '@/lib/validators/ActionValidators'
+import { useMutation } from '@tanstack/react-query'
 
 export const StoreModal = () => {
-  const { isOpen, onOpen, onClose } = useModalStore()
+  const { isOpen, onClose } = useModalStore()
   const router = useRouter()
 
-  const form = useForm<TFormValidator>({
-    resolver: zodResolver(FormValidator),
+  const form = useForm<TStoreCreateSchema>({
+    resolver: zodResolver(StoreCreateSchema),
     defaultValues: {
       name: '',
     },
   })
 
-  const { errors } = form.formState
-
-  const { execute, status } = useAction(createStoreAction, {
-    onSuccess(data) {
-      if (data.error) toast.error(data.error)
-      if (data.success) {
-        toast.success(data.success)
+  const { mutate: createAction, isPending } = useMutation({
+    mutationKey: ['stores'],
+    mutationFn: createStoreAction,
+    onSuccess: ({ success, error }) => {
+      if (error) toast.error(error)
+      if (success) {
+        onClose()
+        toast.success(success)
         router.refresh()
       }
     },
   })
 
-  const isPending = status === 'executing'
-
-  async function onSubmit(values: TFormValidator) {
-    execute(values)
+  function onSubmit(values: TStoreCreateSchema) {
+    createAction(values)
   }
 
   return (
@@ -72,9 +75,7 @@ export const StoreModal = () => {
                       disabled={isPending}
                     />
                   </FormControl>
-                  {errors.name && (
-                    <FormMessage>{errors.name.message}</FormMessage>
-                  )}
+                  <FormMessage />
                 </FormItem>
               )}
             />

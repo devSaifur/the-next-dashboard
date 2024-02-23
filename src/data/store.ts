@@ -1,6 +1,8 @@
+'use server'
+
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { type Store, stores } from '@/db/schema'
+import { type TStoreInsertSchema, stores } from '@/db/schema'
 
 export async function getStoreByUserId(userId: string) {
   const store = await db.query.stores.findFirst({
@@ -23,8 +25,12 @@ export async function getAllStoreByUserId(userId: string) {
   return allStore
 }
 
-export async function createStore(value: Store) {
-  await db.insert(stores).values(value)
+export async function createStore(value: TStoreInsertSchema) {
+  try {
+    await db.insert(stores).values(value)
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function updateStoreName(storeId: string, name: string) {
