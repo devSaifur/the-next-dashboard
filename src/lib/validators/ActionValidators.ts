@@ -19,9 +19,13 @@ export const StoreDeleteSchema = z
 
 export type TStoreDeleteSchema = z.infer<typeof StoreDeleteSchema>
 
-export const BillboardSchema = z.object({
+export const BillboardCreateUpdateSchema = z.object({
   label: z.string().min(1, { message: 'Label is required' }),
   imageUrl: z.string().min(1, { message: 'Image is required' }),
+  storeId: z.string().min(1),
+  billboardId: z.string().min(1),
 })
 
-export type TBillboardSchema = z.infer<typeof BillboardSchema>
+export type TBillboardCreateUpdateSchema = z.infer<
+  typeof BillboardCreateUpdateSchema
+>

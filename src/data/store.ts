@@ -1,28 +1,40 @@
 'use server'
 
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import { db } from '@/db'
 import { type TStoreInsertSchema, stores } from '@/db/schema'
 
 export async function getStoreByUserId(userId: string) {
-  const store = await db.query.stores.findFirst({
-    where: eq(stores.userId, userId),
-  })
-  return store
+  try {
+    const store = await db.query.stores.findFirst({
+      where: eq(stores.userId, userId),
+    })
+    return store
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function getStoreByStoreId(storeId: string) {
-  const store = await db.query.stores.findFirst({
-    where: eq(stores.id, storeId),
-  })
-  return store
+  try {
+    const store = await db.query.stores.findFirst({
+      where: eq(stores.id, storeId),
+    })
+    return store
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function getAllStoreByUserId(userId: string) {
-  const allStore = await db.query.stores.findMany({
-    where: eq(stores.userId, userId),
-  })
-  return allStore
+  try {
+    const allStore = await db.query.stores.findMany({
+      where: eq(stores.userId, userId),
+    })
+    return allStore
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function createStore(value: TStoreInsertSchema) {
@@ -34,9 +46,30 @@ export async function createStore(value: TStoreInsertSchema) {
 }
 
 export async function updateStoreName(storeId: string, name: string) {
-  await db.update(stores).set({ name }).where(eq(stores.id, storeId))
+  try {
+    return await db.update(stores).set({ name }).where(eq(stores.id, storeId))
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export async function deleteStore(storeId: string) {
-  await db.delete(stores).where(eq(stores.id, storeId))
+  try {
+    await db.delete(stores).where(eq(stores.id, storeId))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export async function getStoreByStoreAndUserId(
+  storeId: string,
+  userId: string
+) {
+  try {
+    return await db.query.stores.findFirst({
+      where: and(eq(stores.id, storeId), eq(stores.userId, userId)),
+    })
+  } catch (err) {
+    console.error(err)
+  }
 }

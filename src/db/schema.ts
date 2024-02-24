@@ -1,7 +1,5 @@
 import { relations } from 'drizzle-orm'
 import { timestamp, pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core'
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
-import * as z from 'zod'
 
 export const users = pgTable('user', {
   id: text('id').primaryKey(),
@@ -36,9 +34,6 @@ export const stores = pgTable('store', {
 
 export type TStoreInsertSchema = typeof stores.$inferInsert
 
-export const StoreSelectSchema = createSelectSchema(stores)
-export type TStoreSelectSchema = z.infer<typeof StoreSelectSchema>
-
 export const billboards = pgTable('billboard', {
   id: uuid('id').defaultRandom().primaryKey(),
   storeId: uuid('storeId')
@@ -50,8 +45,7 @@ export const billboards = pgTable('billboard', {
   updatedAt: timestamp('updated_at').notNull(),
 })
 
-export const BillboardInsertSchema = createInsertSchema(billboards)
-export type TBillboardInsertSchema = z.infer<typeof BillboardInsertSchema>
+export type TBillboardInsertSchema = typeof billboards.$inferInsert
 
 export const storesRelations = relations(stores, ({ many }) => ({
   billboards: many(billboards),

@@ -5,12 +5,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { BillboardInsertSchema, TBillboardInsertSchema } from '@/db/schema'
+import { TBillboardInsertSchema } from '@/db/schema'
+import {
+  BillboardCreateUpdateSchema,
+  TBillboardCreateUpdateSchema,
+} from '@/lib/validators/ActionValidators'
 import {
   Form,
   FormControl,
@@ -21,9 +25,13 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
+import ImageUpload from '@/components/image-upload'
+import { useMutation } from '@tanstack/react-query'
+import { createBillboardAction } from '@/actions/billboard-create'
+import { updateBillboardAction } from '@/actions/billboard-update'
 
 interface BillboardFormProps {
-  initialData: TBillboardInsertSchema
+  initialData: TBillboardInsertSchema | undefined
   billboardId: string
 }
 
@@ -33,17 +41,52 @@ export const BillboardForm = ({
 }: BillboardFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const params = useParams()
 
-  const form = useForm<TBillboardInsertSchema>({
-    resolver: zodResolver(BillboardInsertSchema),
+  const storeId = params.storeId as string
+
+  const title = initialData ? 'Edit billboard' : 'Create billboard'
+  const description = initialData ? 'Edit a billboard' : 'Add a new billboard'
+  const action = initialData ? 'Save changes' : 'Create'
+
+  const form = useForm<TBillboardCreateUpdateSchema>({
+    resolver: zodResolver(BillboardCreateUpdateSchema),
     defaultValues: {
-      label: initialData.label,
-      imageUrl: initialData.imageUrl,
-      storeId: billboardId,
+      storeId: storeId, // this is for passing this in server action
+      billboardId: billboardId, // and this too
+      ...initialData,
     },
   })
 
-  function onSubmit(values: TBillboardInsertSchema) {}
+  const { mutate: createBillboard, isPending: isCreating } = useMutation({
+    mutationKey: ['billboards'],
+    mutationFn: createBillboardAction,
+    onSuccess: ({ error, success }) => {
+      if (error) toast.error(error)
+      if (success) toast.success(success)
+
+      router.push(`/${storeId}/billboards`)
+    },
+  })
+
+  const { mutate: updateBillboard, isPending: isUpdating } = useMutation({
+    mutationKey: ['billboards'],
+    mutationFn: updateBillboardAction,
+    onSuccess: ({ error, success }) => {
+      if (error) toast.error(error)
+      if (success) toast.success(success)
+    },
+  })
+
+  const isPending = isCreating || isUpdating
+
+  function onSubmit(values: TBillboardCreateUpdateSchema) {
+    if (initialData) {
+      updateBillboard(values)
+    } else {
+      createBillboard(values)
+    }
+  }
 
   function onDelete() {}
 
@@ -56,10 +99,16 @@ export const BillboardForm = ({
         loading={isPending}
       />
       <div className="flex items-center justify-between">
-        <Heading title="Settings" description="Manage store preferences" />
-        <Button onClick={() => setOpen(true)} variant="destructive" size="icon">
-          <Trash />
-        </Button>
+        <Heading title={title} description={description} />
+        {initialData && (
+          <Button
+            onClick={() => setOpen(true)}
+            variant="destructive"
+            size="icon"
+          >
+            <Trash />
+          </Button>
+        )}
       </div>
       <Separator />
       <Form {...form}>
@@ -67,7 +116,25 @@ export const BillboardForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Background image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    disabled={isPending}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange('')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
               name="label"
@@ -87,7 +154,7 @@ export const BillboardForm = ({
             />
           </div>
           <Button type="submit" disabled={isPending} className="ml-auto">
-            Save changes
+            {action}
           </Button>
         </form>
       </Form>

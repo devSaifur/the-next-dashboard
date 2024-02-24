@@ -1,14 +1,14 @@
 'use server'
 
-import { createBillboard } from '@/data/billboard'
+import { updateBillboard } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { getUser } from '@/hooks/getUser'
 import {
-  TBillboardCreateUpdateSchema,
   BillboardCreateUpdateSchema,
+  TBillboardCreateUpdateSchema,
 } from '@/lib/validators/ActionValidators'
 
-export async function createBillboardAction(
+export async function updateBillboardAction(
   values: TBillboardCreateUpdateSchema
 ) {
   const validatedFields = BillboardCreateUpdateSchema.safeParse(values)
@@ -23,18 +23,19 @@ export async function createBillboardAction(
     return { error: 'Unauthenticated' }
   }
 
-  const { storeId, imageUrl, label } = validatedFields.data
+  const { label, imageUrl, storeId, billboardId } = validatedFields.data
 
   const existingStore = await getStoreByStoreAndUserId(storeId, user.userId)
 
   if (!existingStore) {
-    return { error: 'Unauthorized' }
+    return { error: 'Unauthorize' }
   }
 
   try {
-    await createBillboard({ label, imageUrl, storeId })
-    return { success: 'Billboard created successfully' }
+    await updateBillboard({ label, imageUrl }, billboardId)
+    return { success: 'Billboard successfully updated' }
   } catch (err) {
-    return { error: 'Something went wrong, Please try again' }
+    console.error(err)
+    return { error: 'Something went wrong, please try again.' }
   }
 }

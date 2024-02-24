@@ -1,11 +1,11 @@
 'use client'
 
-import { CldUploadWidget } from 'next-cloudinary'
 import { useEffect, useState } from 'react'
-
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+import { CldUploadWidget } from 'next-cloudinary'
 import { ImagePlus, Trash } from 'lucide-react'
+
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 
 interface ImageUploadProps {
   disabled?: boolean
