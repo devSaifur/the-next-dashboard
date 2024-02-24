@@ -29,3 +29,9 @@ export const BillboardCreateUpdateSchema = z.object({
 export type TBillboardCreateUpdateSchema = z.infer<
   typeof BillboardCreateUpdateSchema
 >
+
+export const BillboardDeleteSchema = z.object({
+  storeId: z.string().min(1),
+  billboardId: z.string().min(1),
+})
+export type TBillboardDeleteSchema = z.infer<typeof BillboardDeleteSchema>

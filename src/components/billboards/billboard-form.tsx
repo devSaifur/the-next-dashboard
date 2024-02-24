@@ -10,7 +10,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { TBillboardInsertSchema } from '@/db/schema'
+import { TBillboardSelectSchema } from '@/db/schema'
 import {
   BillboardCreateUpdateSchema,
   TBillboardCreateUpdateSchema,
@@ -29,21 +29,19 @@ import ImageUpload from '@/components/image-upload'
 import { useMutation } from '@tanstack/react-query'
 import { createBillboardAction } from '@/actions/billboard-create'
 import { updateBillboardAction } from '@/actions/billboard-update'
+import { deleteBillboardAction } from '@/actions/billboard-delete'
 
 interface BillboardFormProps {
-  initialData: TBillboardInsertSchema | undefined
-  billboardId: string
+  initialData: TBillboardSelectSchema | null
 }
 
-export const BillboardForm = ({
-  initialData,
-  billboardId,
-}: BillboardFormProps) => {
+export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const params = useParams()
 
   const storeId = params.storeId as string
+  const billboardId = params.billboardId as string
 
   const title = initialData ? 'Edit billboard' : 'Create billboard'
   const description = initialData ? 'Edit a billboard' : 'Add a new billboard'
@@ -52,9 +50,10 @@ export const BillboardForm = ({
   const form = useForm<TBillboardCreateUpdateSchema>({
     resolver: zodResolver(BillboardCreateUpdateSchema),
     defaultValues: {
-      storeId: storeId, // this is for passing this in server action
+      storeId: storeId, // this is for passing storeId in server action
       billboardId: billboardId, // and this too
-      ...initialData,
+      label: initialData?.label || '',
+      imageUrl: initialData?.imageUrl || '',
     },
   })
 
@@ -63,9 +62,11 @@ export const BillboardForm = ({
     mutationFn: createBillboardAction,
     onSuccess: ({ error, success }) => {
       if (error) toast.error(error)
-      if (success) toast.success(success)
-
-      router.push(`/${storeId}/billboards`)
+      if (success) {
+        toast.success(success)
+        router.push(`/${storeId}/billboards`)
+        router.refresh()
+      }
     },
   })
 
@@ -74,11 +75,28 @@ export const BillboardForm = ({
     mutationFn: updateBillboardAction,
     onSuccess: ({ error, success }) => {
       if (error) toast.error(error)
-      if (success) toast.success(success)
+      if (success) {
+        toast.success(success)
+        router.push(`/${storeId}/billboards`)
+        router.refresh()
+      }
     },
   })
 
-  const isPending = isCreating || isUpdating
+  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
+    mutationKey: ['billboards'],
+    mutationFn: deleteBillboardAction,
+    onSuccess: ({ error, success }) => {
+      if (error) toast.error(error)
+      if (success) {
+        toast.success(success)
+        router.push(`/${storeId}/billboards`)
+        router.refresh()
+      }
+    },
+  })
+
+  const isPending = isCreating || isUpdating || isDeleting
 
   function onSubmit(values: TBillboardCreateUpdateSchema) {
     if (initialData) {
@@ -88,7 +106,9 @@ export const BillboardForm = ({
     }
   }
 
-  function onDelete() {}
+  function onDelete() {
+    deleteBillboard({ storeId, billboardId })
+  }
 
   return (
     <>

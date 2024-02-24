@@ -28,7 +28,9 @@ export const stores = pgTable('store', {
   createdAt: timestamp('created_at', {
     withTimezone: true,
     mode: 'date',
-  }).defaultNow(),
+  })
+    .defaultNow()
+    .notNull(),
   updatedAt: timestamp('updated_at').notNull(),
 })
 
@@ -41,11 +43,12 @@ export const billboards = pgTable('billboard', {
     .notNull(),
   label: varchar('label', { length: 255 }).notNull(),
   imageUrl: text('imageUrl').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').notNull(),
 })
 
 export type TBillboardInsertSchema = typeof billboards.$inferInsert
+export type TBillboardSelectSchema = typeof billboards.$inferSelect
 
 export const storesRelations = relations(stores, ({ many }) => ({
   billboards: many(billboards),
