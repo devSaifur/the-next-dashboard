@@ -42,6 +42,7 @@ export async function createStore(value: TStoreInsertSchema) {
     await db.insert(stores).values(value)
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
@@ -57,7 +58,7 @@ export async function deleteStore(storeId: string) {
   try {
     await db.delete(stores).where(eq(stores.id, storeId))
   } catch (err) {
-    console.error(err)
+    throw err
   }
 }
 

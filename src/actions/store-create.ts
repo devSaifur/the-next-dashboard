@@ -1,6 +1,6 @@
 'use server'
 
-import { getUser } from '@/hooks/getUser'
+import { getUser } from '@/auth/getUser'
 import {
   TStoreCreateSchema,
   StoreCreateSchema,

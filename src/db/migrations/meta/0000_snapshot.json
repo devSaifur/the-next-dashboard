@@ -1,5 +1,5 @@
 {
-  "id": "42542e7b-2de4-481a-9ec6-b00daf9b02ff",
+  "id": "46d01970-e1d4-4e13-a83b-7477e14b37a3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -11,7 +11,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -19,25 +19,25 @@
           "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "label": {
           "name": "label",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "imageUrl": {
           "name": "imageUrl",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -63,7 +63,99 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "billboard_id_storeId_pk": {
+          "name": "billboard_id_storeId_pk",
+          "columns": [
+            "id",
+            "storeId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "category": {
+      "name": "category",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(55)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "billboardId": {
+          "name": "billboardId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "category_storeId_store_id_fk": {
+          "name": "category_storeId_store_id_fk",
+          "tableFrom": "category",
+          "tableTo": "store",
+          "columnsFrom": [
+            "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "category_billboardId_billboard_id_fk": {
+          "name": "category_billboardId_billboard_id_fk",
+          "tableFrom": "category",
+          "tableTo": "billboard",
+          "columnsFrom": [
+            "billboardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "category_storeId_billboardId_id_pk": {
+          "name": "category_storeId_billboardId_id_pk",
+          "columns": [
+            "storeId",
+            "billboardId",
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "session": {
@@ -108,6 +200,69 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "size": {
+      "name": "size",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(55)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar(55)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storeId": {
+          "name": "storeId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "size_storeId_store_id_fk": {
+          "name": "size_storeId_store_id_fk",
+          "tableFrom": "size",
+          "tableTo": "store",
+          "columnsFrom": [
+            "storeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "size_id_storeId_pk": {
+          "name": "size_id_storeId_pk",
+          "columns": [
+            "id",
+            "storeId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "store": {
       "name": "store",
       "schema": "",
@@ -135,7 +290,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {

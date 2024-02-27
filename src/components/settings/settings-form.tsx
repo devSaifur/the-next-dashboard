@@ -69,6 +69,9 @@ export const SettingsForm = ({ initialData, storeId }: SettingsFormProps) => {
         router.refresh()
       }
     },
+    onError: () => {
+      toast.error('Something went wrong! Please try again.')
+    },
   })
 
   const isPending = isUpdating || isDeleting

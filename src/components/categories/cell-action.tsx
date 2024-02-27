@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 
-import type { BillboardColumn } from '@/components/billboards/columns'
+import type { CategoryColumn } from '@/components/categories/columns'
 import {
   DropdownMenu,
   DropdownMenuLabel,
@@ -16,9 +16,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { AlertModal } from '@/components/modals/alert-modals'
+import { deleteCategoryAction } from '@/actions/category-delete'
 
 interface CellActionProps {
-  data: BillboardColumn
+  data: CategoryColumn
 }
 
 export const CellAction = ({ data }: CellActionProps) => {
@@ -28,31 +29,33 @@ export const CellAction = ({ data }: CellActionProps) => {
   const params = useParams()
 
   const storeId = params.storeId as string
-  const billboardId = data.id
+  const categoryId = data.id
+
+  console.log(params)
 
   const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: async () => {
-      return ''
-    },
-    onSuccess: () => {
-      setOpen(false)
-      toast.success('deleted successfully')
-      router.refresh()
+    mutationFn: deleteCategoryAction,
+    onSuccess: ({ error, success }) => {
+      if (error) toast.error(error)
+      if (success) {
+        toast.success(success)
+        router.refresh()
+      }
     },
   })
 
   function onCopy(id: string) {
     navigator.clipboard.writeText(id)
-    toast.success('Billboard id copied to the clipboard')
+    toast.success('Category id copied to clipboard.')
   }
 
   function onUpdate() {
-    router.push(`/${params.storeId}/billboards/${data.id}`)
+    router.push(`/${params.storeId}/categories/${data.id}`)
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteBillboard({ storeId, categoryId })
   }
 
   return (

@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1708612104753,
-      "tag": "0000_modern_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1708684207974,
-      "tag": "0001_brainy_vector",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1708684283750,
-      "tag": "0002_optimal_skaar",
+      "when": 1709043917756,
+      "tag": "0000_high_the_watchers",
       "breakpoints": true
     }
   ]

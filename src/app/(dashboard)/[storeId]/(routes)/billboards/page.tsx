@@ -3,7 +3,6 @@ import { format } from 'date-fns'
 import { BillboardClient } from '@/components/billboards/billboard-client'
 import type { BillboardColumn } from '@/components/billboards/columns'
 import { getBillboardByStoreId } from '@/data/billboard'
-import { TBillboardSelectSchema } from '@/db/schema'
 
 export default async function BillboardsPage({
   params,
@@ -11,8 +10,6 @@ export default async function BillboardsPage({
   params: { storeId: string }
 }) {
   const billboards = await getBillboardByStoreId(params.storeId)
-
-  if (!billboards) return null
 
   const formattedBillboard: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,

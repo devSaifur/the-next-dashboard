@@ -52,11 +52,14 @@ export default function StoreSwitcher({
   )
 
   const isOnSettingsPage = pathname.endsWith('/settings')
+  const isOnBillboardsPage = pathname.endsWith('/billboards')
 
   function onStoreSelect(store: typeof currentStore) {
     setOpen(false)
     if (isOnSettingsPage) {
       router.push(`/${store?.value}/settings`)
+    } else if (isOnBillboardsPage) {
+      router.push(`/${store?.value}/billboards`)
     } else {
       router.push(`/${store?.value}`)
     }

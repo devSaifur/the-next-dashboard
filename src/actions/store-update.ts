@@ -1,7 +1,7 @@
 'use server'
 
 import { updateStoreName } from '@/data/store'
-import { getUser } from '@/hooks/getUser'
+import { getUser } from '@/auth/getUser'
 import {
   StoreUpdateSchema,
   TStoreUpdateSchema,

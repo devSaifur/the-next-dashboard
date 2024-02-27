@@ -1,7 +1,7 @@
 'use server'
 
 import { deleteStore } from '@/data/store'
-import { getUser } from '@/hooks/getUser'
+import { getUser } from '@/auth/getUser'
 import {
   StoreDeleteSchema,
   TStoreDeleteSchema,
@@ -26,7 +26,6 @@ export async function deleteStoreAction(values: TStoreDeleteSchema) {
     await deleteStore(id as string)
     return { success: 'Store deleted successfully' }
   } catch (err) {
-    console.error(err)
-    return { error: 'Something went wrong' }
+    throw err
   }
 }

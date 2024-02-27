@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/Navbar'
 import { getStoreByStoreId } from '@/data/store'
-import { getUser } from '@/hooks/getUser'
+import { getUser } from '@/auth/getUser'
 import { redirect } from 'next/navigation'
 
 export default async function Dashboard({

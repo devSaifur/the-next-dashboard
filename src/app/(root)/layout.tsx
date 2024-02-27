@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getStoreByUserId } from '@/data/store'
-import { getUser } from '@/hooks/getUser'
+import { getUser } from '@/auth/getUser'
 
 export default async function SetupLayout({
   children,

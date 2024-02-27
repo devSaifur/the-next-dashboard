@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
+import axios from 'axios'
 import { useParams, useRouter } from 'next/navigation'
 
 import { Heading } from '@/components/ui/heading'
@@ -12,8 +13,8 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { TBillboardSelectSchema } from '@/db/schema'
 import {
-  BillboardCreateUpdateSchema,
-  TBillboardCreateUpdateSchema,
+  BillboardSchema,
+  TBillboardSchema,
 } from '@/lib/validators/ActionValidators'
 import {
   Form,
@@ -27,9 +28,6 @@ import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
 import ImageUpload from '@/components/image-upload'
 import { useMutation } from '@tanstack/react-query'
-import { createBillboardAction } from '@/actions/billboard-create'
-import { updateBillboardAction } from '@/actions/billboard-update'
-import { deleteBillboardAction } from '@/actions/billboard-delete'
 
 interface BillboardFormProps {
   initialData: TBillboardSelectSchema | null
@@ -47,58 +45,83 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const description = initialData ? 'Edit a billboard' : 'Add a new billboard'
   const action = initialData ? 'Save changes' : 'Create'
 
-  const form = useForm<TBillboardCreateUpdateSchema>({
-    resolver: zodResolver(BillboardCreateUpdateSchema),
-    defaultValues: {
-      storeId: storeId, // this is for passing storeId in server action
-      billboardId: billboardId, // and this too
-      label: initialData?.label || '',
-      imageUrl: initialData?.imageUrl || '',
+  const form = useForm<TBillboardSchema>({
+    resolver: zodResolver(BillboardSchema),
+    defaultValues: initialData || {
+      label: '',
+      imageUrl: '',
     },
   })
 
   const { mutate: createBillboard, isPending: isCreating } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: createBillboardAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/billboards`)
-        router.refresh()
-      }
+    mutationFn: async (data: TBillboardSchema) => {
+      const res = await fetch(`/api/${params.storeId}/billboards`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      return res.json()
+    },
+    onSuccess: () => {
+      toast.success('Billboard crated successfully')
+      router.push(`/${storeId}/billboards`)
+      router.refresh()
+    },
+    onError: (err) => {
+      toast.error(err.message)
     },
   })
 
   const { mutate: updateBillboard, isPending: isUpdating } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: updateBillboardAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/billboards`)
-        router.refresh()
-      }
+    mutationFn: async (data: TBillboardSchema) => {
+      const res = await fetch(
+        `/api/${params.storeId}/billboards/${params.billboardId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      )
+      return res.json()
+    },
+    onSuccess: () => {
+      toast.success('Billboard updated successfully')
+      router.push(`/${storeId}/billboards`)
+      router.refresh()
+    },
+    onError: (err) => {
+      toast.error(err.message)
     },
   })
 
   const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: deleteBillboardAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/billboards`)
-        router.refresh()
-      }
+    mutationFn: async (data: string) => {
+      const res = await fetch(`/api/${storeId}/billboards/${billboardId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      return res.json()
+    },
+    onSuccess: () => {
+      toast.success('billboard deleted successfully')
+      router.push(`/${storeId}/billboards`)
+      router.refresh()
     },
   })
 
   const isPending = isCreating || isUpdating || isDeleting
 
-  function onSubmit(values: TBillboardCreateUpdateSchema) {
+  function onSubmit(values: TBillboardSchema) {
     if (initialData) {
       updateBillboard(values)
     } else {
@@ -107,7 +130,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   }
 
   function onDelete() {
-    deleteBillboard({ storeId, billboardId })
+    deleteBillboard(billboardId)
   }
 
   return (
@@ -163,7 +186,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
                   <FormLabel>Label</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Store name"
+                      placeholder="Billboard name"
                       disabled={isPending}
                       {...field}
                     />

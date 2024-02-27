@@ -38,12 +38,16 @@ export const login = action(SignInValidator, async (values) => {
     }
   }
 
-  const session = await lucia.createSession(existingUser.id, {})
-  const sessionCookie = lucia.createSessionCookie(session.id)
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  )
-  return redirect('/')
+  try {
+    const session = await lucia.createSession(existingUser.id, {})
+    const sessionCookie = lucia.createSessionCookie(session.id)
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    )
+    return redirect('/')
+  } catch (err) {
+    return { error: 'Something went wrong, please try again' }
+  }
 })
