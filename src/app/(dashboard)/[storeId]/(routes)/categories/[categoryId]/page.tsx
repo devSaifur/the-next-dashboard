@@ -9,7 +9,9 @@ export default async function CategoriesPage({
 }) {
   const { categoryId, storeId } = params
 
-  const category = await getCategoriesById(categoryId)
+  const category = await getCategoriesById(
+    categoryId === 'new' ? null : categoryId
+  ) // when creating new category the params'll be 'new', that doesn't require database call
 
   const billboards = await getBillboardByStoreId(storeId)
 

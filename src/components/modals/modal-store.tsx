@@ -1,5 +1,6 @@
 'use client'
 
+import axios from 'axios'
 import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,39 +18,32 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { createStoreAction } from '@/actions/store-create'
-import {
-  StoreCreateSchema,
-  TStoreCreateSchema,
-} from '@/lib/validators/ActionValidators'
+import { StoreSchema, TStoreSchema } from '@/lib/validators/ActionValidators'
 import { useMutation } from '@tanstack/react-query'
 
 export const StoreModal = () => {
   const { isOpen, onClose } = useModalStore()
   const router = useRouter()
 
-  const form = useForm<TStoreCreateSchema>({
-    resolver: zodResolver(StoreCreateSchema),
+  const form = useForm<TStoreSchema>({
+    resolver: zodResolver(StoreSchema),
     defaultValues: {
       name: '',
     },
   })
 
-  const { mutate: createAction, isPending } = useMutation({
+  const { mutate: createStore, isPending } = useMutation({
     mutationKey: ['stores'],
-    mutationFn: createStoreAction,
-    onSuccess: ({ success, error }) => {
-      if (error) toast.error(error)
-      if (success) {
-        onClose()
-        toast.success(success)
-        router.refresh()
-      }
+    mutationFn: async (data: TStoreSchema) => axios.post('/api/stores', data),
+    onSuccess: () => {
+      onClose()
+      toast.success('Store created successfully')
+      router.refresh()
     },
   })
 
-  function onSubmit(values: TStoreCreateSchema) {
-    createAction(values)
+  function onSubmit(values: TStoreSchema) {
+    createStore(values)
   }
 
   return (

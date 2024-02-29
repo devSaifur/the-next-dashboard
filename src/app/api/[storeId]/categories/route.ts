@@ -58,7 +58,12 @@ export async function POST(
 
     const { name, billboardId } = validatedFields.data
 
-    const category = await createCategory({ name, billboardId })
+    const category = await createCategory({
+      name,
+      billboardId,
+      storeId,
+      updatedAt: new Date(),
+    })
 
     return NextResponse.json(category)
   } catch (err) {

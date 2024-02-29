@@ -9,7 +9,9 @@ export default async function BillboardsPage({
 }: {
   params: { storeId: string }
 }) {
-  const billboards = await getBillboardByStoreId(params.storeId)
+  const { storeId } = params
+
+  const billboards = await getBillboardByStoreId(storeId)
 
   const formattedBillboard: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,

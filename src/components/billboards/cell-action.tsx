@@ -41,8 +41,8 @@ export const CellAction = ({ data }: CellActionProps) => {
       return res
     },
     onSuccess: () => {
+      setOpen(false)
       toast.success('Billboard deleted successfully')
-      router.push(`/${storeId}/billboards`)
       router.refresh()
     },
     onError: (err) => {

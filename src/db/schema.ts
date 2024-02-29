@@ -54,7 +54,7 @@ export const billboards = pgTable(
   {
     id: uuid('id').defaultRandom().notNull(),
     storeId: uuid('storeId')
-      .references(() => stores.id)
+      .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
     label: varchar('label', { length: 255 }).notNull(),
     imageUrl: text('imageUrl').notNull(),
@@ -84,14 +84,18 @@ export const categories = pgTable(
   {
     id: uuid('id').defaultRandom().notNull(),
     name: varchar('name', { length: 55 }).notNull(),
-    createdAt: timestamp('created_at').defaultNow(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
-    storeId: uuid('storeId').references(() => stores.id, {
-      onDelete: 'cascade',
-    }),
-    billboardId: uuid('billboardId').references(() => billboards.id, {
-      onDelete: 'cascade',
-    }),
+    storeId: uuid('storeId')
+      .references(() => stores.id, {
+        onDelete: 'cascade',
+      })
+      .notNull(),
+    billboardId: uuid('billboardId')
+      .references(() => billboards.id, {
+        onDelete: 'cascade',
+      })
+      .notNull(),
   },
   (category) => ({
     compoundKey: primaryKey({
@@ -112,6 +116,7 @@ export const categoriesRelations = relations(categories, ({ one }) => ({
 }))
 
 export type TCategorySelectSchema = typeof categories.$inferSelect
+export type TCategoryInsertSchema = typeof categories.$inferInsert
 
 export const sizes = pgTable(
   'size',
@@ -119,7 +124,9 @@ export const sizes = pgTable(
     id: uuid('id').defaultRandom(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
-    storeId: uuid('storeId').references(() => stores.id),
+    storeId: uuid('storeId')
+      .references(() => stores.id, { onDelete: 'cascade' })
+      .notNull(),
     createAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('created_at').notNull(),
   },

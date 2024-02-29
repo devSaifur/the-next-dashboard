@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS "billboard" (
 CREATE TABLE IF NOT EXISTS "category" (
 	"id" uuid DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(55) NOT NULL,
-	"created_at" timestamp DEFAULT now(),
+	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp NOT NULL,
-	"storeId" uuid,
-	"billboardId" uuid,
+	"storeId" uuid NOT NULL,
+	"billboardId" uuid NOT NULL,
 	CONSTRAINT "category_storeId_billboardId_id_pk" PRIMARY KEY("storeId","billboardId","id")
 );
 --> statement-breakpoint
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "size" (
 	"id" uuid DEFAULT gen_random_uuid(),
 	"name" varchar(55) NOT NULL,
 	"value" varchar(55) NOT NULL,
-	"storeId" uuid,
+	"storeId" uuid NOT NULL,
 	"created_at" timestamp NOT NULL,
 	CONSTRAINT "size_id_storeId_pk" PRIMARY KEY("id","storeId")
 );
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "billboard" ADD CONSTRAINT "billboard_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "store"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "billboard" ADD CONSTRAINT "billboard_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "store"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -73,7 +73,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "size" ADD CONSTRAINT "size_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "store"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "size" ADD CONSTRAINT "size_storeId_store_id_fk" FOREIGN KEY ("storeId") REFERENCES "store"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

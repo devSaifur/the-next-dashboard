@@ -1,5 +1,6 @@
 'use client'
 
+import axios, { isAxiosError } from 'axios'
 import { useState } from 'react'
 import { MoreHorizontal, Edit, Copy, Trash } from 'lucide-react'
 import { toast } from 'sonner'
@@ -16,7 +17,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { AlertModal } from '@/components/modals/alert-modals'
-import { deleteCategoryAction } from '@/actions/category-delete'
 
 interface CellActionProps {
   data: CategoryColumn
@@ -31,16 +31,20 @@ export const CellAction = ({ data }: CellActionProps) => {
   const storeId = params.storeId as string
   const categoryId = data.id
 
-  console.log(params)
-
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
-    mutationKey: ['billboards'],
-    mutationFn: deleteCategoryAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.refresh()
+  const { mutate: deleteCategory, isPending: isDeleting } = useMutation({
+    mutationKey: ['categories'],
+    mutationFn: async () =>
+      axios.delete(`/api/${storeId}/categories/${categoryId}`),
+    onSuccess: () => {
+      setOpen(false)
+      toast.success('Category deleted successfully')
+      router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
       }
     },
   })
@@ -55,7 +59,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   }
 
   function onDelete() {
-    deleteBillboard({ storeId, categoryId })
+    deleteCategory()
   }
 
   return (

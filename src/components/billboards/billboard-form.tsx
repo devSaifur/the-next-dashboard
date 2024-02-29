@@ -30,7 +30,7 @@ import ImageUpload from '@/components/image-upload'
 import { useMutation } from '@tanstack/react-query'
 
 interface BillboardFormProps {
-  initialData: TBillboardSelectSchema | null
+  initialData: TBillboardSelectSchema | undefined
 }
 
 export const BillboardForm = ({ initialData }: BillboardFormProps) => {
@@ -55,10 +55,8 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const { mutate: createBillboard, isPending: isCreating } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: async (data: TBillboardSchema) => {
-      const res = await axios.post(`/api/${params.storeId}/billboards`, data)
-      return res
-    },
+    mutationFn: async (data: TBillboardSchema) =>
+      await axios.post(`/api/${params.storeId}/billboards`, data),
     onSuccess: () => {
       toast.success('Billboard crated successfully')
       router.push(`/${storeId}/billboards`)
@@ -75,13 +73,11 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const { mutate: updateBillboard, isPending: isUpdating } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: async (data: TBillboardSchema) => {
-      const res = await axios.patch(
+    mutationFn: async (data: TBillboardSchema) =>
+      await axios.patch(
         `/api/${params.storeId}/billboards/${params.billboardId}`,
         data
-      )
-      return res
-    },
+      ),
     onSuccess: () => {
       toast.success('Billboard updated successfully')
       router.push(`/${storeId}/billboards`)
@@ -98,13 +94,8 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: async (data: string) => {
-      const res = await axios.delete(
-        `/api/${storeId}/billboards/${billboardId}`,
-        { data }
-      )
-      return res
-    },
+    mutationFn: async () =>
+      await axios.delete(`/api/${storeId}/billboards/${billboardId}`),
     onSuccess: () => {
       toast.success('Billboard deleted successfully')
       router.push(`/${storeId}/billboards`)
@@ -130,7 +121,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   }
 
   function onDelete() {
-    deleteBillboard(billboardId)
+    deleteBillboard()
   }
 
   return (

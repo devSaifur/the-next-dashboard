@@ -53,7 +53,9 @@ export async function PATCH(
       return new NextResponse('Category id is required', { status: 400 })
     }
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, categoryId)
+    const { userId } = user
+
+    const usersStore = await getStoreByStoreAndUserId(storeId, userId)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })
@@ -77,17 +79,19 @@ export async function DELETE(
   try {
     const user = await getUser()
 
-    if (user) {
+    if (!user) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
     const { categoryId, storeId } = params
 
-    if (categoryId) {
-      return new NextResponse('Category id is required', { status: 400 })
+    if (!categoryId || !storeId) {
+      return new NextResponse('Invalid fields', { status: 400 })
     }
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, categoryId)
+    const { userId } = user
+
+    const usersStore = await getStoreByStoreAndUserId(storeId, userId)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

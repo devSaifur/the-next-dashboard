@@ -1,13 +1,13 @@
 import { getUser } from '@/auth/getUser'
-import { StoreCreateSchema } from '@/lib/validators/ActionValidators'
 import { createStore } from '@/data/store'
+import { StoreSchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    const validatedFields = StoreCreateSchema.safeParse(body)
+    const validatedFields = StoreSchema.safeParse(body)
 
     if (!validatedFields.success) {
       return new NextResponse('Invalid fields', { status: 400 })

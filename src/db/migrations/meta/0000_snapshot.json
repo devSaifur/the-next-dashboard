@@ -1,5 +1,5 @@
 {
-  "id": "46d01970-e1d4-4e13-a83b-7477e14b37a3",
+  "id": "3a6a6258-4aea-4968-a7ed-b452d293b63c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -59,7 +59,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -95,7 +95,7 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -108,13 +108,13 @@
           "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "billboardId": {
           "name": "billboardId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -227,7 +227,7 @@
           "name": "storeId",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -248,7 +248,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

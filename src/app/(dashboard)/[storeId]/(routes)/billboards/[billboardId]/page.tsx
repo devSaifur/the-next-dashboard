@@ -8,7 +8,9 @@ export default async function BillboardPage({
 }) {
   const { billboardId } = params
 
-  const billboard = await getBillboardById(billboardId)
+  const billboard = await getBillboardById(
+    billboardId === 'new' ? null : billboardId
+  ) // when creating new billboard the params'll be 'new', that doesn't require database call
 
   return (
     <div className="flex-col">

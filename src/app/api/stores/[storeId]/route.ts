@@ -1,16 +1,17 @@
 import { deleteStore, updateStore } from '@/data/store'
 import { getUser } from '@/auth/getUser'
-import {
-  StoreDeleteSchema,
-  StoreUpdateSchema,
-} from '@/lib/validators/ActionValidators'
-import { NextResponse } from 'next/server'
 
-export async function PATCH(req: Request) {
+import { NextResponse } from 'next/server'
+import { StoreSchema } from '@/lib/validators/ActionValidators'
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { storeId: string } }
+) {
   try {
     const body = await req.json()
 
-    const validatedFields = StoreUpdateSchema.safeParse(body)
+    const validatedFields = StoreSchema.safeParse(body)
 
     if (!validatedFields.success) {
       return { error: 'Invalid fields' }
@@ -22,7 +23,8 @@ export async function PATCH(req: Request) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
-    const { name, storeId } = validatedFields.data
+    const { name } = validatedFields.data
+    const { storeId } = params
     const { userId } = user
 
     const store = await updateStore(storeId, userId, name)
@@ -40,9 +42,7 @@ export async function DELETE(
   try {
     const { storeId } = params
 
-    const validatedFields = StoreDeleteSchema.safeParse(storeId)
-
-    if (!validatedFields.success) {
+    if (!storeId) {
       return new NextResponse('Invalid fields', { status: 400 })
     }
 

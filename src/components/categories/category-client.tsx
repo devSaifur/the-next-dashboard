@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { CategoryColumn } from '@/components/categories/columns'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/components/categories/columns'
+import { ApiList } from '@/components/api-list'
 
 interface CategoryClientProps {
   data: CategoryColumn[]
@@ -32,6 +33,10 @@ export const CategoryClient = ({ data }: CategoryClientProps) => {
       </div>
       <Separator />
       <DataTable columns={columns} data={data} searchKey="name" />
+
+      <Heading title="API" description="API Calls for Categories" />
+      <Separator />
+      <ApiList entityName="categories" entityIdName="categoryId" />
     </>
   )
 }

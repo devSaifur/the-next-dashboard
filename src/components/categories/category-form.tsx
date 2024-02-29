@@ -1,5 +1,6 @@
 'use client'
 
+import axios, { isAxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,11 +12,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { TBillboardSelectSchema, TCategorySelectSchema } from '@/db/schema'
-import {
-  CategoryCreateUpdateSchema,
-  TCategoryCreateUpdateSchema,
-} from '@/lib/validators/ActionValidators'
+import { TBillboardSelectSchema } from '@/db/schema'
+
 import {
   Form,
   FormControl,
@@ -33,13 +31,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { deleteBillboardAction } from '@/actions/billboard-delete'
-import { createCategoryAction } from '@/actions/category-create'
-import { updateCategoryAction } from '@/actions/category-update'
-import { deleteCategoryAction } from '@/actions/category-delete'
+import {
+  CategorySchema,
+  TCategorySchema,
+} from '@/lib/validators/ActionValidators'
 
 interface CategoryFormProps {
-  initialData: TCategorySelectSchema | null
+  initialData: TCategorySchema | undefined
   billboards: TBillboardSelectSchema[]
 }
 
@@ -58,58 +56,71 @@ export const CategoryForm = ({
   const description = initialData ? 'Edit a billboard' : 'Add a new billboard'
   const action = initialData ? 'Save changes' : 'Create'
 
-  const form = useForm<TCategoryCreateUpdateSchema>({
-    resolver: zodResolver(CategoryCreateUpdateSchema),
-    defaultValues: {
-      storeId: storeId, // this is for passing storeId in server action
-      categoryId: categoryId, // and this too
-      name: initialData?.name || '',
-      billboardId: initialData?.billboardId || '',
+  const form = useForm<TCategorySchema>({
+    resolver: zodResolver(CategorySchema),
+    defaultValues: initialData || {
+      name: '',
+      billboardId: '',
     },
   })
 
   const { mutate: createCategory, isPending: isCreating } = useMutation({
     mutationKey: ['categories'],
-    mutationFn: createCategoryAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/categories`)
-        router.refresh()
+    mutationFn: async (data: TCategorySchema) =>
+      await axios.post(`/api/${storeId}/categories`, data),
+    onSuccess: () => {
+      toast.success('Category crated successfully')
+      router.push(`/${storeId}/categories`)
+      router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
       }
     },
   })
 
   const { mutate: updateCategory, isPending: isUpdating } = useMutation({
     mutationKey: ['categories'],
-    mutationFn: updateCategoryAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/categories`)
-        router.refresh()
+    mutationFn: async (data: TCategorySchema) =>
+      await axios.patch(`/api/${storeId}/categories/${categoryId}`, data),
+    onSuccess: () => {
+      toast.success('Category updated successfully')
+      router.push(`/${storeId}/categories`)
+      router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
       }
     },
   })
 
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
+  const { mutate: deleteCategory, isPending: isDeleting } = useMutation({
     mutationKey: ['categories'],
-    mutationFn: deleteCategoryAction,
-    onSuccess: ({ error, success }) => {
-      if (error) toast.error(error)
-      if (success) {
-        toast.success(success)
-        router.push(`/${storeId}/`)
-        router.refresh()
+    mutationFn: async () =>
+      axios.delete(`/api/${storeId}/categories/${categoryId}`),
+    onSuccess: () => {
+      toast.success('Category deleted successfully')
+      router.push(`/${storeId}/categories`)
+      router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
       }
     },
   })
 
   const isPending = isCreating || isUpdating || isDeleting
 
-  function onSubmit(values: TCategoryCreateUpdateSchema) {
+  function onSubmit(values: TCategorySchema) {
     if (initialData) {
       updateCategory(values)
     } else {
@@ -118,7 +129,7 @@ export const CategoryForm = ({
   }
 
   function onDelete() {
-    deleteBillboard({ storeId, categoryId })
+    deleteCategory()
   }
 
   return (

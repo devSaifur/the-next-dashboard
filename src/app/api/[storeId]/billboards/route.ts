@@ -31,10 +31,6 @@ export async function POST(
 
     const { label, imageUrl } = validatedFields.data
 
-    if (validatedFields.success) {
-      return new NextResponse('nigga what', { status: 400 })
-    }
-
     const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
 
     if (!usersStore) {

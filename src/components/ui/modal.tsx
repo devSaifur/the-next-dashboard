@@ -22,7 +22,7 @@ export function Modal({
   children,
 }: ModalProps) {
   function onChange(open: boolean) {
-    if (!isOpen) {
+    if (!open) {
       onClose()
     }
   }

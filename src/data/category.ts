@@ -1,29 +1,29 @@
 import { db } from '@/db'
-import { categories } from '@/db/schema'
+import { TCategoryInsertSchema, categories } from '@/db/schema'
 import { TCategorySchema } from '@/lib/validators/ActionValidators'
 import { getFirstObject } from '@/utils/helpers'
 import { desc, eq } from 'drizzle-orm'
 
 export async function getCategoriesByStoreId(storeId: string) {
-  const data = await db.query.categories.findMany({
+  return await db.query.categories.findMany({
     where: eq(categories.storeId, storeId),
     with: {
       billboard: true,
     },
     orderBy: [desc(categories.createdAt)],
   })
-  return data
 }
 
-export async function getCategoriesById(id: string) {
-  try {
-    const data = await db.query.categories.findFirst({
+export async function getCategoriesById(id: string | null) {
+  if (id) {
+    return await db.query.categories.findFirst({
       where: eq(categories.id, id),
+      columns: {
+        name: true,
+        billboardId: true,
+        storeId: true,
+      },
     })
-    if (!data) return null
-    return data
-  } catch (err) {
-    return null
   }
 }
 
@@ -36,11 +36,8 @@ export async function getCategoryById(id: string) {
   })
 }
 
-export async function createCategory(values: TCategorySchema) {
-  const category = await db
-    .insert(categories)
-    .values({ updatedAt: new Date(), ...values })
-    .returning()
+export async function createCategory(values: TCategoryInsertSchema) {
+  const category = await db.insert(categories).values(values).returning()
   return getFirstObject(category)
 }
 
