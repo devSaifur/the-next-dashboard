@@ -31,6 +31,10 @@ export async function POST(
 
     const { label, imageUrl } = validatedFields.data
 
+    if (validatedFields.success) {
+      return new NextResponse('nigga what', { status: 400 })
+    }
+
     const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
 
     if (!usersStore) {
@@ -58,8 +62,8 @@ export async function GET(
     const billboards = await getBillboardByStoreId(params.storeId)
 
     return NextResponse.json(billboards)
-  } catch (error) {
-    console.error('[BILLBOARDS_GET]', error)
+  } catch (err) {
+    console.error('[BILLBOARDS_GET]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }

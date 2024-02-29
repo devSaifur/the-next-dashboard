@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Trash } from 'lucide-react'
+import { Axe, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
 
 import { Heading } from '@/components/ui/heading'
@@ -56,14 +56,8 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const { mutate: createBillboard, isPending: isCreating } = useMutation({
     mutationKey: ['billboards'],
     mutationFn: async (data: TBillboardSchema) => {
-      const res = await fetch(`/api/${params.storeId}/billboards`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      return res.json()
+      const res = await axios.post(`/api/${params.storeId}/billboards`, data)
+      return res
     },
     onSuccess: () => {
       toast.success('Billboard crated successfully')
@@ -71,24 +65,22 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
       router.refresh()
     },
     onError: (err) => {
-      toast.error(err.message)
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
+      }
     },
   })
 
   const { mutate: updateBillboard, isPending: isUpdating } = useMutation({
     mutationKey: ['billboards'],
     mutationFn: async (data: TBillboardSchema) => {
-      const res = await fetch(
+      const res = await axios.patch(
         `/api/${params.storeId}/billboards/${params.billboardId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        }
+        data
       )
-      return res.json()
+      return res
     },
     onSuccess: () => {
       toast.success('Billboard updated successfully')
@@ -96,26 +88,34 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
       router.refresh()
     },
     onError: (err) => {
-      toast.error(err.message)
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
+      }
     },
   })
 
   const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
     mutationFn: async (data: string) => {
-      const res = await fetch(`/api/${storeId}/billboards/${billboardId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      return res.json()
+      const res = await axios.delete(
+        `/api/${storeId}/billboards/${billboardId}`,
+        { data }
+      )
+      return res
     },
     onSuccess: () => {
-      toast.success('billboard deleted successfully')
+      toast.success('Billboard deleted successfully')
       router.push(`/${storeId}/billboards`)
       router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
+      }
     },
   })
 

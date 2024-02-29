@@ -3,6 +3,7 @@
 import { eq, and } from 'drizzle-orm'
 import { db } from '@/db'
 import { type TStoreInsertSchema, stores } from '@/db/schema'
+import { getFirstObject } from '@/utils/helpers'
 
 export async function getStoreByUserId(userId: string) {
   try {
@@ -39,27 +40,33 @@ export async function getAllStoreByUserId(userId: string) {
 
 export async function createStore(value: TStoreInsertSchema) {
   try {
-    await db.insert(stores).values(value)
+    const store = await db.insert(stores).values(value).returning()
+    return getFirstObject(store)
   } catch (err) {
     console.error(err)
     throw err
   }
 }
 
-export async function updateStoreName(storeId: string, name: string) {
-  try {
-    return await db.update(stores).set({ name }).where(eq(stores.id, storeId))
-  } catch (err) {
-    console.error(err)
-  }
+export async function updateStore(
+  storeId: string,
+  userId: string,
+  name: string
+) {
+  const storeArr = await db
+    .update(stores)
+    .set({ name })
+    .where(and(eq(stores.id, storeId), eq(stores.userId, userId)))
+    .returning()
+  return getFirstObject(storeArr)
 }
 
 export async function deleteStore(storeId: string) {
-  try {
-    await db.delete(stores).where(eq(stores.id, storeId))
-  } catch (err) {
-    throw err
-  }
+  const store = await db
+    .delete(stores)
+    .where(eq(stores.id, storeId))
+    .returning()
+  return getFirstObject(store)
 }
 
 export async function getStoreByStoreAndUserId(

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MoreHorizontal, Edit, Copy, Trash } from 'lucide-react'
 import { toast } from 'sonner'
+import axios, { isAxiosError } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -32,13 +33,24 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
-    mutationFn: async () => {
-      return ''
+    mutationFn: async (data: string) => {
+      const res = await axios.delete(
+        `/api/${storeId}/billboards/${billboardId}`,
+        { data }
+      )
+      return res
     },
     onSuccess: () => {
-      setOpen(false)
-      toast.success('deleted successfully')
+      toast.success('Billboard deleted successfully')
+      router.push(`/${storeId}/billboards`)
       router.refresh()
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data)
+      } else {
+        toast.error('Error, please try again.')
+      }
     },
   })
 
@@ -52,7 +64,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteBillboard(billboardId)
   }
 
   return (

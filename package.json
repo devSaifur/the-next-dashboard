@@ -9,7 +9,7 @@
     "shadcn:add": "pnpm dlx shadcn-ui@latest add",
     "db:generate": "drizzle-kit generate:pg",
     "db:studio": "pnpm drizzle-kit studio --port 4000",
-    "db:migrate": "tsx --env-file=.env ./src/db/migrate.ts",
+    "db:push": "tsx --env-file=.env ./src/db/migrate.ts",
     "lint": "next lint"
   },
   "dependencies": {

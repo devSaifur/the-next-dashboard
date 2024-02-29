@@ -33,20 +33,9 @@ export const BillboardDeleteSchema = z.object({
 
 export type TBillboardDeleteSchema = z.infer<typeof BillboardDeleteSchema>
 
-export const CategoryCreateUpdateSchema = z.object({
+export const CategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   billboardId: z.string().min(1, { message: 'Billboard is required' }),
-  storeId: z.string().min(1),
-  categoryId: z.string().min(1),
 })
 
-export type TCategoryCreateUpdateSchema = z.infer<
-  typeof CategoryCreateUpdateSchema
->
-
-export const CategoryDeleteSchema = z.object({
-  storeId: z.string().min(1),
-  categoryId: z.string().min(1),
-})
-
-export type TCategoryDeleteSchema = z.infer<typeof CategoryDeleteSchema>
+export type TCategorySchema = z.infer<typeof CategorySchema>

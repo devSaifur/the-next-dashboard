@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { categories } from '@/db/schema'
-import { TCategoryCreateUpdateSchema } from '@/lib/validators/ActionValidators'
+import { TCategorySchema } from '@/lib/validators/ActionValidators'
+import { getFirstObject } from '@/utils/helpers'
 import { desc, eq } from 'drizzle-orm'
 
 export async function getCategoriesByStoreId(storeId: string) {
@@ -26,33 +27,47 @@ export async function getCategoriesById(id: string) {
   }
 }
 
-export async function createCategory(values: TCategoryCreateUpdateSchema) {
-  try {
-    await db.insert(categories).values({ updatedAt: new Date(), ...values })
-  } catch (err) {
-    console.error(err)
-  }
+export async function getCategoryById(id: string) {
+  return await db.query.categories.findFirst({
+    where: eq(categories.id, id),
+    with: {
+      billboard: true,
+    },
+  })
+}
+
+export async function createCategory(values: TCategorySchema) {
+  const category = await db
+    .insert(categories)
+    .values({ updatedAt: new Date(), ...values })
+    .returning()
+  return getFirstObject(category)
 }
 
 export async function updateCategory(
-  values: Omit<TCategoryCreateUpdateSchema, 'storeId'>
+  values: TCategorySchema,
+  categoryId: string
 ) {
-  const { name, billboardId, categoryId } = values
+  const { name, billboardId } = values
 
-  try {
-    await db
-      .update(categories)
-      .set({ name, billboardId, updatedAt: new Date() })
-      .where(eq(categories.id, categoryId))
-  } catch (err) {
-    console.error(err)
-  }
+  const category = await db
+    .update(categories)
+    .set({ name, billboardId, updatedAt: new Date() })
+    .where(eq(categories.id, categoryId))
+    .returning()
+  return getFirstObject(category)
 }
 
 export async function deleteCategory(categoryId: string) {
-  try {
-    await db.delete(categories).where(eq(categories.id, categoryId))
-  } catch (err) {
-    console.error(err)
-  }
+  const category = await db
+    .delete(categories)
+    .where(eq(categories.id, categoryId))
+    .returning()
+  return getFirstObject(category)
+}
+
+export async function getCategories(storeId: string) {
+  return await db.query.categories.findMany({
+    where: eq(categories.storeId, storeId),
+  })
 }

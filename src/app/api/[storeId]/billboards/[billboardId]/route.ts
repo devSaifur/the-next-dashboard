@@ -6,10 +6,7 @@ import {
   updateBillboard,
 } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
-import {
-  BillboardSchema,
-  TBillboardSchema,
-} from '@/lib/validators/ActionValidators'
+import { BillboardSchema } from '@/lib/validators/ActionValidators'
 
 export async function GET(
   req: Request,
@@ -23,8 +20,8 @@ export async function GET(
     const billboard = await getBillboardById(params.billboardId)
 
     return NextResponse.json(billboard)
-  } catch (error) {
-    console.log('[BILLBOARD_GET]', error)
+  } catch (err) {
+    console.log('[BILLBOARD_GET]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
@@ -53,8 +50,8 @@ export async function DELETE(
     const billboard = await deleteBillboardById(params.billboardId)
 
     return NextResponse.json(billboard)
-  } catch (error) {
-    console.log('[BILLBOARD_DELETE]', error)
+  } catch (err) {
+    console.error('[BILLBOARD_DELETE]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
@@ -102,8 +99,8 @@ export async function PATCH(
     )
 
     return NextResponse.json(updatedBillboard)
-  } catch (error) {
-    console.log('[BILLBOARD_PATCH]', error)
+  } catch (err) {
+    console.error('[BILLBOARD_PATCH]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
