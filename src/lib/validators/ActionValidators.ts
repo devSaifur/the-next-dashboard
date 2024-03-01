@@ -26,3 +26,11 @@ export const SizeSchema = z.object({
 })
 
 export type TSizeSchema = z.infer<typeof SizeSchema>
+
+export const ColorSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  value: z.string().min(1, { message: 'Value is required' }).regex(/^#/, {
+    message: 'Must be a valid color',
+  }),
+})
+export type TColorSchema = z.infer<typeof ColorSchema>

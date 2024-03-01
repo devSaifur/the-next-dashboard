@@ -1,19 +1,18 @@
 'use client'
 
-import axios, { isAxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import { useMutation } from '@tanstack/react-query'
+import axios, { isAxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
 
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { TBillboardSelectSchema } from '@/db/schema'
-
+import { TColorSelectSchema } from '@/db/schema'
+import { ColorSchema, TColorSchema } from '@/lib/validators/ActionValidators'
 import {
   Form,
   FormControl,
@@ -24,53 +23,40 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  CategorySchema,
-  TCategorySchema,
-} from '@/lib/validators/ActionValidators'
+import { useMutation } from '@tanstack/react-query'
 
-interface CategoryFormProps {
-  initialData: TCategorySchema | undefined
-  billboards: TBillboardSelectSchema[]
+interface ColorFormProps {
+  initialData: TColorSelectSchema | undefined
 }
 
-export const CategoryForm = ({
-  initialData,
-  billboards,
-}: CategoryFormProps) => {
+export const ColorForm = ({ initialData }: ColorFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const params = useParams()
 
   const storeId = params.storeId as string
-  const categoryId = params.categoryId as string
+  const colorId = params.colorId as string
 
-  const title = initialData ? 'Edit category' : 'Create category'
-  const description = initialData ? 'Edit a category' : 'Add a new category'
+  const title = initialData ? 'Edit Color' : 'Create Color'
+  const description = initialData ? 'Edit a Color' : 'Add a new Color'
   const action = initialData ? 'Save changes' : 'Create'
 
-  const form = useForm<TCategorySchema>({
-    resolver: zodResolver(CategorySchema),
+  const form = useForm<TColorSchema>({
+    resolver: zodResolver(ColorSchema),
     defaultValues: initialData || {
       name: '',
-      billboardId: '',
+      value: '',
     },
   })
 
-  const { mutate: createCategory, isPending: isCreating } = useMutation({
-    mutationKey: ['categories'],
-    mutationFn: async (data: TCategorySchema) =>
-      await axios.post(`/api/${storeId}/categories`, data),
+  const { mutate: createColor, isPending: isCreating } = useMutation({
+    mutationKey: ['colors'],
+    mutationFn: async (data: TColorSchema) =>
+      await axios.post(`/api/${storeId}/colors`, data),
+
     onSuccess: () => {
-      toast.success('Category crated successfully')
-      router.push(`/${storeId}/categories`)
+      toast.success('Color crated successfully')
+      router.push(`/${storeId}/colors`)
       router.refresh()
     },
     onError: (err) => {
@@ -82,13 +68,14 @@ export const CategoryForm = ({
     },
   })
 
-  const { mutate: updateCategory, isPending: isUpdating } = useMutation({
-    mutationKey: ['categories'],
-    mutationFn: async (data: TCategorySchema) =>
-      await axios.patch(`/api/${storeId}/categories/${categoryId}`, data),
+  const { mutate: updateColor, isPending: isUpdating } = useMutation({
+    mutationKey: ['colors'],
+    mutationFn: async (data: TColorSchema) =>
+      await axios.patch(`/api/${storeId}/colors/${colorId}`, data),
+
     onSuccess: () => {
-      toast.success('Category updated successfully')
-      router.push(`/${storeId}/categories`)
+      toast.success('Color updated successfully')
+      router.push(`/${storeId}/colors`)
       router.refresh()
     },
     onError: (err) => {
@@ -100,13 +87,14 @@ export const CategoryForm = ({
     },
   })
 
-  const { mutate: deleteCategory, isPending: isDeleting } = useMutation({
-    mutationKey: ['categories'],
+  const { mutate: deleteColor, isPending: isDeleting } = useMutation({
+    mutationKey: ['colors'],
     mutationFn: async () =>
-      axios.delete(`/api/${storeId}/categories/${categoryId}`),
+      await axios.delete(`/api/${storeId}/colors/${colorId}`),
+
     onSuccess: () => {
-      toast.success('Category deleted successfully')
-      router.push(`/${storeId}/categories`)
+      toast.success('Color deleted successfully')
+      router.push(`/${storeId}/colors`)
       router.refresh()
     },
     onError: (err) => {
@@ -120,16 +108,16 @@ export const CategoryForm = ({
 
   const isPending = isCreating || isUpdating || isDeleting
 
-  function onSubmit(values: TCategorySchema) {
+  function onSubmit(values: TColorSchema) {
     if (initialData) {
-      updateCategory(values)
+      updateColor(values)
     } else {
-      createCategory(values)
+      createColor(values)
     }
   }
 
   function onDelete() {
-    deleteCategory()
+    deleteColor()
   }
 
   return (
@@ -167,7 +155,7 @@ export const CategoryForm = ({
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Category name"
+                      placeholder="Color name"
                       disabled={isPending}
                       {...field}
                     />
@@ -176,35 +164,25 @@ export const CategoryForm = ({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="billboardId"
+              name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Billboard</FormLabel>
+                  <FormLabel>Value</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      defaultValue={field.value}
-                      disabled={isPending}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            defaultValue={field.value}
-                            placeholder="Select a billboard"
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {billboards.map((billboard) => (
-                          <SelectItem value={billboard.id} key={billboard.id}>
-                            {billboard.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex items-center gap-x-6">
+                      <Input
+                        placeholder="Color value"
+                        disabled={isPending}
+                        {...field}
+                      />
+                      <div
+                        className="rounded-full border p-4"
+                        style={{ backgroundColor: field.value }}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

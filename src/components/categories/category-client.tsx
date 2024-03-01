@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
 import { useParams, useRouter } from 'next/navigation'
-import { CategoryColumn } from '@/components/categories/columns'
 import { DataTable } from '@/components/ui/data-table'
-import { columns } from '@/components/categories/columns'
 import { ApiList } from '@/components/api-list'
+import {
+  CategoryColumn,
+  columns,
+} from '@/components/categories/category-columns'
 
 interface CategoryClientProps {
   data: CategoryColumn[]

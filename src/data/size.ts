@@ -1,8 +1,8 @@
 import 'server-only'
-
 import { desc, eq } from 'drizzle-orm'
+
 import { db } from '@/db'
-import { billboards, sizes } from '@/db/schema'
+import { sizes } from '@/db/schema'
 import { TSizeSchema } from '@/lib/validators/ActionValidators'
 import { getFirstObject } from '@/utils/helpers'
 
@@ -17,7 +17,7 @@ export async function getSizeById(id: string | null) {
 export async function getSizesByStoreId(storeId: string) {
   return db.query.sizes.findMany({
     where: eq(sizes.storeId, storeId),
-    orderBy: [desc(billboards.createdAt)],
+    orderBy: [desc(sizes.createdAt)],
   })
 }
 

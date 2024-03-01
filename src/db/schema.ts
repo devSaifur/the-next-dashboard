@@ -45,6 +45,7 @@ export const storesRelations = relations(stores, ({ many }) => ({
   billboards: many(billboards),
   categories: many(categories),
   sizes: many(sizes),
+  colors: many(colors),
 }))
 
 export type TStoreInsertSchema = typeof stores.$inferInsert
@@ -128,7 +129,7 @@ export const sizes = pgTable(
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('created_at').notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
   },
   (size) => ({
     compoundKey: primaryKey({
@@ -145,3 +146,31 @@ export const sizesRelation = relations(sizes, ({ one }) => ({
 }))
 
 export type TSizeSelectSchema = typeof sizes.$inferSelect
+
+export const colors = pgTable(
+  'color',
+  {
+    id: uuid('id').defaultRandom().notNull(),
+    name: varchar('name', { length: 55 }).notNull(),
+    value: varchar('value', { length: 55 }).notNull(),
+    storeId: uuid('storeId')
+      .references(() => stores.id, { onDelete: 'cascade' })
+      .notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
+  },
+  (color) => ({
+    compoundKey: primaryKey({
+      columns: [color.id, color.storeId],
+    }),
+  })
+)
+
+export const colorsRelation = relations(colors, ({ one }) => ({
+  store: one(stores, {
+    fields: [colors.storeId],
+    references: [stores.id],
+  }),
+}))
+
+export type TColorSelectSchema = typeof colors.$inferSelect

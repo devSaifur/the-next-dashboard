@@ -1,7 +1,7 @@
 import { SizeForm } from '@/components/sizes/size-form'
 import { getSizeById } from '@/data/size'
 
-export default async function BillboardPage({
+export default async function SizePage({
   params,
 }: {
   params: { sizeId: string }

@@ -1,6 +1,6 @@
 import 'server-only'
-
 import { eq, and } from 'drizzle-orm'
+
 import { db } from '@/db'
 import { type TStoreInsertSchema, stores } from '@/db/schema'
 import { getFirstObject } from '@/utils/helpers'

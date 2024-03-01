@@ -1,10 +1,10 @@
 import { format } from 'date-fns'
 
 import { SizeClient } from '@/components/sizes/size-client'
-import type { SizeColumn } from '@/components/sizes/columns'
+import type { SizeColumn } from '@/components/sizes/size-columns'
 import { getSizesByStoreId } from '@/data/size'
 
-export default async function BillboardsPage({
+export default async function SizesPage({
   params,
 }: {
   params: { storeId: string }

@@ -1,8 +1,8 @@
 import { format } from 'date-fns'
 
 import { BillboardClient } from '@/components/billboards/billboard-client'
-import type { BillboardColumn } from '@/components/billboards/columns'
-import { getBillboardByStoreId } from '@/data/billboard'
+import type { BillboardColumn } from '@/components/billboards/billboard-columns'
+import { getBillboardsByStoreId } from '@/data/billboard'
 
 export default async function BillboardsPage({
   params,
@@ -11,7 +11,7 @@ export default async function BillboardsPage({
 }) {
   const { storeId } = params
 
-  const billboards = await getBillboardByStoreId(storeId)
+  const billboards = await getBillboardsByStoreId(storeId)
 
   const formattedBillboard: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,

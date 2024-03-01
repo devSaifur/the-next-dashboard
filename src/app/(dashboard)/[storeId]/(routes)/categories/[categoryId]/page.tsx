@@ -1,8 +1,8 @@
 import { CategoryForm } from '@/components/categories/category-form'
-import { getBillboardByStoreId } from '@/data/billboard'
+import { getBillboardsByStoreId } from '@/data/billboard'
 import { getCategoriesById } from '@/data/category'
 
-export default async function CategoriesPage({
+export default async function CategoryPage({
   params,
 }: {
   params: { categoryId: string; storeId: string }
@@ -13,7 +13,7 @@ export default async function CategoriesPage({
     categoryId === 'new' ? null : categoryId
   ) // when creating new category the params'll be 'new', that doesn't require database call
 
-  const billboards = await getBillboardByStoreId(storeId)
+  const billboards = await getBillboardsByStoreId(storeId)
 
   return (
     <div className="flex-col">

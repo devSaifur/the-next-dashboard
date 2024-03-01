@@ -1,13 +1,13 @@
 'use client'
 
+import axios, { isAxiosError } from 'axios'
 import { useState } from 'react'
 import { MoreHorizontal, Edit, Copy, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-import axios, { isAxiosError } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 
-import type { BillboardColumn } from '@/components/billboards/columns'
+import type { CategoryColumn } from '@/components/categories/category-columns'
 import {
   DropdownMenu,
   DropdownMenuLabel,
@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button'
 import { AlertModal } from '@/components/modals/alert-modals'
 
 interface CellActionProps {
-  data: BillboardColumn
+  data: CategoryColumn
 }
 
 export const CellAction = ({ data }: CellActionProps) => {
@@ -29,15 +29,15 @@ export const CellAction = ({ data }: CellActionProps) => {
   const params = useParams()
 
   const storeId = params.storeId as string
-  const billboardId = data.id
+  const categoryId = data.id
 
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
-    mutationKey: ['billboards'],
+  const { mutate: deleteCategory, isPending: isDeleting } = useMutation({
+    mutationKey: ['categories'],
     mutationFn: async () =>
-      await axios.delete(`/api/${storeId}/billboards/${billboardId}`),
+      axios.delete(`/api/${storeId}/categories/${categoryId}`),
     onSuccess: () => {
       setOpen(false)
-      toast.success('Billboard deleted successfully')
+      toast.success('Category deleted successfully')
       router.refresh()
     },
     onError: (err) => {
@@ -51,15 +51,15 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   function onCopy(id: string) {
     navigator.clipboard.writeText(id)
-    toast.success('Billboard id copied to the clipboard')
+    toast.success('Category id copied to clipboard.')
   }
 
   function onUpdate() {
-    router.push(`/${storeId}/billboards/${billboardId}`)
+    router.push(`/${params.storeId}/categories/${data.id}`)
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteCategory()
   }
 
   return (

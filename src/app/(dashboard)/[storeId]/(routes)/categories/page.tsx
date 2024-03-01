@@ -1,10 +1,10 @@
 import { format } from 'date-fns'
 
 import { CategoryClient } from '@/components/categories/category-client'
-import type { CategoryColumn } from '@/components/categories/columns'
+import type { CategoryColumn } from '@/components/categories/category-columns'
 import { getCategoriesByStoreId } from '@/data/category'
 
-export default async function BillboardsPage({
+export default async function CategoriesPage({
   params,
 }: {
   params: { storeId: string }
