@@ -7,7 +7,7 @@ import axios, { isAxiosError } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 
-import type { BillboardColumn } from '@/components/billboards/columns'
+import { SizeColumn } from '@/components/sizes/columns'
 import {
   DropdownMenu,
   DropdownMenuLabel,
@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button'
 import { AlertModal } from '@/components/modals/alert-modals'
 
 interface CellActionProps {
-  data: BillboardColumn
+  data: SizeColumn
 }
 
 export const CellAction = ({ data }: CellActionProps) => {
@@ -29,12 +29,12 @@ export const CellAction = ({ data }: CellActionProps) => {
   const params = useParams()
 
   const storeId = params.storeId as string
-  const billboardId = data.id
+  const sizeId = data.id
 
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
+  const { mutate: deleteSize, isPending: isDeleting } = useMutation({
     mutationKey: ['billboards'],
     mutationFn: async () =>
-      await axios.delete(`/api/${storeId}/billboards/${billboardId}`),
+      await axios.delete(`/api/${storeId}/billboards/${sizeId}`),
     onSuccess: () => {
       setOpen(false)
       toast.success('Billboard deleted successfully')
@@ -55,11 +55,11 @@ export const CellAction = ({ data }: CellActionProps) => {
   }
 
   function onUpdate() {
-    router.push(`/${storeId}/billboards/${billboardId}`)
+    router.push(`/${storeId}/sizes/${sizeId}`)
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteSize()
   }
 
   return (

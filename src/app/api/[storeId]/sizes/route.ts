@@ -1,8 +1,8 @@
-import { createBillboard, getBillboardsByStoreId } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { getUser } from '@/auth/getUser'
-import { BillboardSchema } from '@/lib/validators/ActionValidators'
+import { SizeSchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
+import { createSize, getSizesByStoreId } from '@/data/size'
 
 export async function POST(
   req: Request,
@@ -23,13 +23,13 @@ export async function POST(
 
     const body = await req.json()
 
-    const validatedFields = BillboardSchema.safeParse(body)
+    const validatedFields = SizeSchema.safeParse(body)
 
     if (!validatedFields.success) {
       return new NextResponse('Invalid input.', { status: 400 })
     }
 
-    const { label, imageUrl } = validatedFields.data
+    const { name, value } = validatedFields.data
 
     const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
 
@@ -37,11 +37,11 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 405 })
     }
 
-    const billboard = await createBillboard({ label, imageUrl }, storeId)
+    const size = await createSize({ name, value }, storeId)
 
-    return NextResponse.json(billboard)
+    return NextResponse.json(size)
   } catch (err) {
-    console.error('[BILLBOARDS_POST]', err)
+    console.error('[SIZES_POST]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
@@ -51,13 +51,15 @@ export async function GET(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    if (!params.storeId) {
+    const { storeId } = params
+
+    if (!storeId) {
       return new NextResponse('Store id is required', { status: 400 })
     }
 
-    const billboards = await getBillboardsByStoreId(params.storeId)
+    const sizes = await getSizesByStoreId(storeId)
 
-    return NextResponse.json(billboards)
+    return NextResponse.json(sizes)
   } catch (err) {
     console.error('[BILLBOARDS_GET]', err)
     return new NextResponse('Internal error', { status: 500 })

@@ -121,13 +121,13 @@ export type TCategoryInsertSchema = typeof categories.$inferInsert
 export const sizes = pgTable(
   'size',
   {
-    id: uuid('id').defaultRandom(),
+    id: uuid('id').defaultRandom().notNull(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
     storeId: uuid('storeId')
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
-    createAt: timestamp('created_at').defaultNow(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('created_at').notNull(),
   },
   (size) => ({
@@ -143,3 +143,5 @@ export const sizesRelation = relations(sizes, ({ one }) => ({
     references: [stores.id],
   }),
 }))
+
+export type TSizeSelectSchema = typeof sizes.$inferSelect

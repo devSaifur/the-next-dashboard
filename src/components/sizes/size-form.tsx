@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Axe, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import axios, { isAxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
@@ -11,11 +11,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { TBillboardSelectSchema } from '@/db/schema'
-import {
-  BillboardSchema,
-  TBillboardSchema,
-} from '@/lib/validators/ActionValidators'
+import { TSizeSelectSchema } from '@/db/schema'
+import { SizeSchema, TSizeSchema } from '@/lib/validators/ActionValidators'
 import {
   Form,
   FormControl,
@@ -26,40 +23,40 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
-import ImageUpload from '@/components/image-upload'
 import { useMutation } from '@tanstack/react-query'
 
-interface BillboardFormProps {
-  initialData: TBillboardSelectSchema | undefined
+interface SizeFormProps {
+  initialData: TSizeSelectSchema | undefined
 }
 
-export const BillboardForm = ({ initialData }: BillboardFormProps) => {
+export const SizeForm = ({ initialData }: SizeFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const params = useParams()
 
   const storeId = params.storeId as string
-  const billboardId = params.billboardId as string
+  const sizeId = params.sizeId as string
 
-  const title = initialData ? 'Edit billboard' : 'Create billboard'
-  const description = initialData ? 'Edit a billboard' : 'Add a new billboard'
+  const title = initialData ? 'Edit Size' : 'Create Size'
+  const description = initialData ? 'Edit a Size' : 'Add a new Size'
   const action = initialData ? 'Save changes' : 'Create'
 
-  const form = useForm<TBillboardSchema>({
-    resolver: zodResolver(BillboardSchema),
+  const form = useForm<TSizeSchema>({
+    resolver: zodResolver(SizeSchema),
     defaultValues: initialData || {
-      label: '',
-      imageUrl: '',
+      name: '',
+      value: '',
     },
   })
 
-  const { mutate: createBillboard, isPending: isCreating } = useMutation({
-    mutationKey: ['billboards'],
-    mutationFn: async (data: TBillboardSchema) =>
-      await axios.post(`/api/${storeId}/billboards`, data),
+  const { mutate: createSize, isPending: isCreating } = useMutation({
+    mutationKey: ['sizes'],
+    mutationFn: async (data: TSizeSchema) =>
+      await axios.post(`/api/${storeId}/sizes`, data),
+
     onSuccess: () => {
-      toast.success('Billboard crated successfully')
-      router.push(`/${storeId}/billboards`)
+      toast.success('Size crated successfully')
+      router.push(`/${storeId}/sizes`)
       router.refresh()
     },
     onError: (err) => {
@@ -71,13 +68,14 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
     },
   })
 
-  const { mutate: updateBillboard, isPending: isUpdating } = useMutation({
-    mutationKey: ['billboards'],
-    mutationFn: async (data: TBillboardSchema) =>
-      await axios.patch(`/api/${storeId}/billboards/${billboardId}`, data),
+  const { mutate: updateSize, isPending: isUpdating } = useMutation({
+    mutationKey: ['sizes'],
+    mutationFn: async (data: TSizeSchema) =>
+      await axios.patch(`/api/${storeId}/sizes/${sizeId}`, data),
+
     onSuccess: () => {
-      toast.success('Billboard updated successfully')
-      router.push(`/${storeId}/billboards`)
+      toast.success('Size updated successfully')
+      router.push(`/${storeId}/sizes`)
       router.refresh()
     },
     onError: (err) => {
@@ -89,13 +87,14 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
     },
   })
 
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
-    mutationKey: ['billboards'],
+  const { mutate: deleteSize, isPending: isDeleting } = useMutation({
+    mutationKey: ['sizes'],
     mutationFn: async () =>
-      await axios.delete(`/api/${storeId}/billboards/${billboardId}`),
+      await axios.delete(`/api/${storeId}/sizes/${sizeId}`),
+
     onSuccess: () => {
-      toast.success('Billboard deleted successfully')
-      router.push(`/${storeId}/billboards`)
+      toast.success('Size deleted successfully')
+      router.push(`/${storeId}/sizes`)
       router.refresh()
     },
     onError: (err) => {
@@ -109,16 +108,16 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const isPending = isCreating || isUpdating || isDeleting
 
-  function onSubmit(values: TBillboardSchema) {
+  function onSubmit(values: TSizeSchema) {
     if (initialData) {
-      updateBillboard(values)
+      updateSize(values)
     } else {
-      createBillboard(values)
+      createSize(values)
     }
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteSize()
   }
 
   return (
@@ -149,16 +148,15 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
         >
           <FormField
             control={form.control}
-            name="imageUrl"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Background image</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
+                  <Input
+                    placeholder="Size name"
                     disabled={isPending}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange('')}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -168,13 +166,13 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
           <div className="gap-8 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
-              name="label"
+              name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Value</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Billboard name"
+                      placeholder="Size value"
                       disabled={isPending}
                       {...field}
                     />

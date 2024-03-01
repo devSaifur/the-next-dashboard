@@ -19,3 +19,10 @@ export const CategorySchema = z.object({
 })
 
 export type TCategorySchema = z.infer<typeof CategorySchema>
+
+export const SizeSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  value: z.string().min(1, { message: 'Value is required' }),
+})
+
+export type TSizeSchema = z.infer<typeof SizeSchema>

@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/Navbar'
-import { getStoreByStoreId } from '@/data/store'
+import { getStoreById } from '@/data/store'
 import { getUser } from '@/auth/getUser'
 import { redirect } from 'next/navigation'
 
@@ -13,7 +13,7 @@ export default async function Dashboard({
   const user = await getUser()
   if (!user) redirect('/sign-in')
 
-  const store = await getStoreByStoreId(params.storeId)
+  const store = await getStoreById(params.storeId)
 
   if (!store) redirect('/')
 

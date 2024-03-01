@@ -1,8 +1,10 @@
+import 'server-only'
+
+import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { billboards } from '@/db/schema'
 import { TBillboardSchema } from '@/lib/validators/ActionValidators'
 import { getFirstObject } from '@/utils/helpers'
-import { desc, eq } from 'drizzle-orm'
 
 export async function getBillboardById(id: string | null) {
   if (id) {
@@ -12,12 +14,11 @@ export async function getBillboardById(id: string | null) {
   }
 }
 
-export async function getBillboardByStoreId(storeId: string) {
-  const data = await db.query.billboards.findMany({
+export async function getBillboardsByStoreId(storeId: string) {
+  return await db.query.billboards.findMany({
     where: eq(billboards.storeId, storeId),
     orderBy: [desc(billboards.createdAt)],
   })
-  return data
 }
 
 export async function createBillboard(

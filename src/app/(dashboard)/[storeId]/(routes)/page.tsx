@@ -1,4 +1,4 @@
-import { getStoreByStoreId } from '@/data/store'
+import { getStoreById } from '@/data/store'
 
 interface DashboardPageProps {
   params: { storeId: string }
@@ -6,7 +6,7 @@ interface DashboardPageProps {
 
 const DashboardPage = async ({ params }: DashboardPageProps) => {
   const { storeId } = params
-  const store = await getStoreByStoreId(storeId)
+  const store = await getStoreById(storeId)
 
   return (
     <div>

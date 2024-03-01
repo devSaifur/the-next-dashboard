@@ -1,8 +1,10 @@
+import 'server-only'
+
+import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { TCategoryInsertSchema, categories } from '@/db/schema'
 import { TCategorySchema } from '@/lib/validators/ActionValidators'
 import { getFirstObject } from '@/utils/helpers'
-import { desc, eq } from 'drizzle-orm'
 
 export async function getCategoriesByStoreId(storeId: string) {
   return await db.query.categories.findMany({
