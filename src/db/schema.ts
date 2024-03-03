@@ -57,7 +57,7 @@ export type TStoreInsertSchema = typeof stores.$inferInsert
 export const billboards = pgTable(
   'billboard',
   {
-    id: uuid('id').defaultRandom().notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
     storeId: uuid('store_id')
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
@@ -66,11 +66,13 @@ export const billboards = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
   },
-  (billboard) => ({
-    compoundKey: primaryKey({
-      columns: [billboard.id, billboard.storeId],
-    }),
-  })
+  (billboard) => {
+    return {
+      billboardsStoreIdx: index('idx_billboards_store_id').on(
+        billboard.storeId
+      ),
+    }
+  }
 )
 
 export const billboardsRelations = relations(billboards, ({ one, many }) => ({
@@ -104,7 +106,10 @@ export const categories = pgTable(
   },
   (category) => {
     return {
-      billboardIdx: index('billboard_idx').on(category.billboardId),
+      categoriesBillboardIdx: index('idx_categories_product_id').on(
+        category.billboardId
+      ),
+      categoriesStoreIdx: index('idx_categories_store_id').on(category.storeId),
     }
   }
 )
@@ -127,7 +132,7 @@ export type TCategoryInsertSchema = typeof categories.$inferInsert
 export const sizes = pgTable(
   'size',
   {
-    id: uuid('id').defaultRandom().notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
     storeId: uuid('store_id')
@@ -136,11 +141,11 @@ export const sizes = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
   },
-  (size) => ({
-    compoundKey: primaryKey({
-      columns: [size.id, size.storeId],
-    }),
-  })
+  (size) => {
+    return {
+      sizesStoreIdx: index('idx_sizes_store_id').on(size.storeId),
+    }
+  }
 )
 
 export const sizesRelation = relations(sizes, ({ one, many }) => ({
@@ -156,7 +161,7 @@ export type TSizeSelectSchema = typeof sizes.$inferSelect
 export const colors = pgTable(
   'color',
   {
-    id: uuid('id').defaultRandom().notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
     storeId: uuid('store_id')
@@ -165,11 +170,11 @@ export const colors = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
   },
-  (color) => ({
-    compoundKey: primaryKey({
-      columns: [color.id, color.storeId],
-    }),
-  })
+  (color) => {
+    return {
+      colorsStoreIdx: index('idx_colors_store_id').on(color.storeId),
+    }
+  }
 )
 
 export const colorsRelation = relations(colors, ({ one, many }) => ({
@@ -185,7 +190,7 @@ export type TColorSelectSchema = typeof colors.$inferSelect
 export const products = pgTable(
   'product',
   {
-    id: uuid('id').defaultRandom().notNull().primaryKey(),
+    id: uuid('id').defaultRandom().primaryKey(),
     name: varchar('name', { length: 255 }).notNull(),
     price: decimal('price').notNull(),
     isFeatured: boolean('is_featured').default(false),
@@ -207,10 +212,12 @@ export const products = pgTable(
   },
   (product) => {
     return {
-      storeIdx: index('store_idx').on(product.storeId),
-      categoryIdx: index('category_idx').on(product.categoryId),
-      sizeIdx: index('size_idx').on(product.sizeId),
-      colorIdx: index('color_idx').on(product.categoryId),
+      productsStoreIdx: index('idx_products_store_id').on(product.storeId),
+      productsCategoryIdx: index('idx_products_category_id').on(
+        product.categoryId
+      ),
+      productsSizeIdx: index('idx_products_size_id').on(product.sizeId),
+      productsColorIdx: index('idx_products_color_id').on(product.categoryId),
     }
   }
 )
@@ -222,7 +229,7 @@ export const productsRelation = relations(products, ({ many }) => ({
 export const images = pgTable(
   'image',
   {
-    id: uuid('id').defaultRandom().notNull(),
+    id: uuid('id').defaultRandom().primaryKey(),
     productId: uuid('product_id')
       .references(() => products.id, { onDelete: 'cascade' })
       .notNull(),
@@ -230,11 +237,11 @@ export const images = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
   },
-  (image) => ({
-    compoundKey: primaryKey({
-      columns: [image.id, image.productId],
-    }),
-  })
+  (image) => {
+    return {
+      imagesProductIdx: index('idx_images_product_id').on(image.productId),
+    }
+  }
 )
 
 export const imagesRelation = relations(images, ({ one }) => ({

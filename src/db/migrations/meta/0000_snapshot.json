@@ -1,5 +1,5 @@
 {
-  "id": "85114b14-2bd3-427f-9c2b-6862e918c4b5",
+  "id": "6ce01973-b42f-45d6-917b-cd9c3b1cce81",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -11,7 +11,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -47,7 +47,15 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_billboards_store_id": {
+          "name": "idx_billboards_store_id",
+          "columns": [
+            "store_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "billboard_store_id_store_id_fk": {
           "name": "billboard_store_id_store_id_fk",
@@ -63,15 +71,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "billboard_id_store_id_pk": {
-          "name": "billboard_id_store_id_pk",
-          "columns": [
-            "id",
-            "store_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "category": {
@@ -81,7 +81,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -117,7 +117,22 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_categories_product_id": {
+          "name": "idx_categories_product_id",
+          "columns": [
+            "billboard_id"
+          ],
+          "isUnique": false
+        },
+        "idx_categories_store_id": {
+          "name": "idx_categories_store_id",
+          "columns": [
+            "store_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "category_store_id_store_id_fk": {
           "name": "category_store_id_store_id_fk",
@@ -146,16 +161,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "category_store_id_billboard_id_id_pk": {
-          "name": "category_store_id_billboard_id_id_pk",
-          "columns": [
-            "store_id",
-            "billboard_id",
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "color": {
@@ -165,7 +171,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -201,7 +207,15 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_colors_store_id": {
+          "name": "idx_colors_store_id",
+          "columns": [
+            "store_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "color_store_id_store_id_fk": {
           "name": "color_store_id_store_id_fk",
@@ -217,15 +231,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "color_id_store_id_pk": {
-          "name": "color_id_store_id_pk",
-          "columns": [
-            "id",
-            "store_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "image": {
@@ -235,7 +241,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -265,7 +271,15 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_images_product_id": {
+          "name": "idx_images_product_id",
+          "columns": [
+            "product_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "image_product_id_product_id_fk": {
           "name": "image_product_id_product_id_fk",
@@ -281,15 +295,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "image_id_product_id_pk": {
-          "name": "image_id_product_id_pk",
-          "columns": [
-            "id",
-            "product_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "product": {
@@ -368,29 +374,29 @@
         }
       },
       "indexes": {
-        "store_idx": {
-          "name": "store_idx",
+        "idx_products_store_id": {
+          "name": "idx_products_store_id",
           "columns": [
             "store_id"
           ],
           "isUnique": false
         },
-        "category_idx": {
-          "name": "category_idx",
+        "idx_products_category_id": {
+          "name": "idx_products_category_id",
           "columns": [
             "category_id"
           ],
           "isUnique": false
         },
-        "size_idx": {
-          "name": "size_idx",
+        "idx_products_size_id": {
+          "name": "idx_products_size_id",
           "columns": [
             "size_id"
           ],
           "isUnique": false
         },
-        "color_idx": {
-          "name": "color_idx",
+        "idx_products_color_id": {
+          "name": "idx_products_color_id",
           "columns": [
             "category_id"
           ],
@@ -503,7 +509,7 @@
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -539,7 +545,15 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_sizes_store_id": {
+          "name": "idx_sizes_store_id",
+          "columns": [
+            "store_id"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {
         "size_store_id_store_id_fk": {
           "name": "size_store_id_store_id_fk",
@@ -555,15 +569,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "size_id_store_id_pk": {
-          "name": "size_id_store_id_pk",
-          "columns": [
-            "id",
-            "store_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "store": {

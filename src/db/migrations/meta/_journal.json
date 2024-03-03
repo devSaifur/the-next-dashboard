@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1709327228500,
-      "tag": "0000_funny_black_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1709327659246,
-      "tag": "0001_clean_nextwave",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1709327757023,
-      "tag": "0002_violet_sasquatch",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1709328521596,
-      "tag": "0003_mute_frog_thor",
+      "when": 1709487985812,
+      "tag": "0000_white_robin_chapel",
       "breakpoints": true
     }
   ]
