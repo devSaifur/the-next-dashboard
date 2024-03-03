@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import {
   timestamp,
   pgTable,
@@ -5,8 +6,10 @@ import {
   varchar,
   uuid,
   primaryKey,
+  decimal,
+  boolean,
+  index,
 } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm'
 
 export const users = pgTable('user', {
   id: text('id').primaryKey(),
@@ -46,6 +49,7 @@ export const storesRelations = relations(stores, ({ many }) => ({
   categories: many(categories),
   sizes: many(sizes),
   colors: many(colors),
+  products: many(products),
 }))
 
 export type TStoreInsertSchema = typeof stores.$inferInsert
@@ -54,7 +58,7 @@ export const billboards = pgTable(
   'billboard',
   {
     id: uuid('id').defaultRandom().notNull(),
-    storeId: uuid('storeId')
+    storeId: uuid('store_id')
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
     label: varchar('label', { length: 255 }).notNull(),
@@ -83,29 +87,29 @@ export type TBillboardSelectSchema = typeof billboards.$inferSelect
 export const categories = pgTable(
   'category',
   {
-    id: uuid('id').defaultRandom().notNull(),
+    id: uuid('id').defaultRandom().notNull().primaryKey(),
     name: varchar('name', { length: 55 }).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').notNull(),
-    storeId: uuid('storeId')
+    storeId: uuid('store_id')
       .references(() => stores.id, {
         onDelete: 'cascade',
       })
       .notNull(),
-    billboardId: uuid('billboardId')
+    billboardId: uuid('billboard_id')
       .references(() => billboards.id, {
         onDelete: 'cascade',
       })
       .notNull(),
   },
-  (category) => ({
-    compoundKey: primaryKey({
-      columns: [category.storeId, category.billboardId, category.id],
-    }),
-  })
+  (category) => {
+    return {
+      billboardIdx: index('billboard_idx').on(category.billboardId),
+    }
+  }
 )
 
-export const categoriesRelations = relations(categories, ({ one }) => ({
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
   store: one(stores, {
     fields: [categories.storeId],
     references: [stores.id],
@@ -114,6 +118,7 @@ export const categoriesRelations = relations(categories, ({ one }) => ({
     fields: [categories.billboardId],
     references: [billboards.id],
   }),
+  product: many(products),
 }))
 
 export type TCategorySelectSchema = typeof categories.$inferSelect
@@ -125,7 +130,7 @@ export const sizes = pgTable(
     id: uuid('id').defaultRandom().notNull(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
-    storeId: uuid('storeId')
+    storeId: uuid('store_id')
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -138,11 +143,12 @@ export const sizes = pgTable(
   })
 )
 
-export const sizesRelation = relations(sizes, ({ one }) => ({
+export const sizesRelation = relations(sizes, ({ one, many }) => ({
   store: one(stores, {
     fields: [sizes.storeId],
     references: [stores.id],
   }),
+  product: many(products),
 }))
 
 export type TSizeSelectSchema = typeof sizes.$inferSelect
@@ -153,7 +159,7 @@ export const colors = pgTable(
     id: uuid('id').defaultRandom().notNull(),
     name: varchar('name', { length: 55 }).notNull(),
     value: varchar('value', { length: 55 }).notNull(),
-    storeId: uuid('storeId')
+    storeId: uuid('store_id')
       .references(() => stores.id, { onDelete: 'cascade' })
       .notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -166,11 +172,74 @@ export const colors = pgTable(
   })
 )
 
-export const colorsRelation = relations(colors, ({ one }) => ({
+export const colorsRelation = relations(colors, ({ one, many }) => ({
   store: one(stores, {
     fields: [colors.storeId],
     references: [stores.id],
   }),
+  product: many(products),
 }))
 
 export type TColorSelectSchema = typeof colors.$inferSelect
+
+export const products = pgTable(
+  'product',
+  {
+    id: uuid('id').defaultRandom().notNull().primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    price: decimal('price').notNull(),
+    isFeatured: boolean('is_featured').default(false),
+    isArchived: boolean('is_archived').default(false),
+    storeId: uuid('store_id')
+      .references(() => stores.id)
+      .notNull(),
+    categoryId: uuid('category_id')
+      .references(() => categories.id)
+      .notNull(),
+    sizeId: uuid('size_id')
+      .references(() => sizes.id)
+      .notNull(),
+    colorId: uuid('color_id')
+      .references(() => colors.id)
+      .notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
+  },
+  (product) => {
+    return {
+      storeIdx: index('store_idx').on(product.storeId),
+      categoryIdx: index('category_idx').on(product.categoryId),
+      sizeIdx: index('size_idx').on(product.sizeId),
+      colorIdx: index('color_idx').on(product.categoryId),
+    }
+  }
+)
+
+export const productsRelation = relations(products, ({ many }) => ({
+  image: many(images),
+}))
+
+export const images = pgTable(
+  'image',
+  {
+    id: uuid('id').defaultRandom().notNull(),
+    productId: uuid('product_id')
+      .references(() => products.id, { onDelete: 'cascade' })
+      .notNull(),
+    url: text('url').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
+  },
+  (image) => ({
+    compoundKey: primaryKey({
+      columns: [image.id, image.productId],
+    }),
+  })
+)
+
+export const imagesRelation = relations(images, ({ one }) => ({
+  image: one(products, {
+    fields: [images.productId],
+    references: [products.id],
+  }),
+}))
