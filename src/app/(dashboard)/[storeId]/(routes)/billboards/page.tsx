@@ -13,7 +13,7 @@ export default async function BillboardsPage({
 
   const billboards = await getBillboardsByStoreId(storeId)
 
-  const formattedBillboard: BillboardColumn[] = billboards.map((item) => ({
+  const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
     label: item.label,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
@@ -22,7 +22,7 @@ export default async function BillboardsPage({
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardClient data={formattedBillboard} />
+        <BillboardClient data={formattedBillboards} />
       </div>
     </div>
   )

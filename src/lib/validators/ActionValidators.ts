@@ -34,3 +34,20 @@ export const ColorSchema = z.object({
   }),
 })
 export type TColorSchema = z.infer<typeof ColorSchema>
+
+export const ProductSchema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  price: z.coerce.number().min(1, { message: 'Price is required' }),
+  isFeatured: z.boolean().nullable(),
+  isArchived: z.boolean().nullable(),
+  images: z
+    .object({
+      url: z.string().min(1, { message: 'Image is required' }),
+    })
+    .array(),
+  categoryId: z.string().min(1),
+  sizeId: z.string().min(1),
+  colorId: z.string().min(1),
+})
+
+export type TProductSchema = z.infer<typeof ProductSchema>

@@ -4,3 +4,8 @@ export function getFirstObject<T extends object>(arr: T[]): T | null {
   }
   return null
 }
+
+export const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})

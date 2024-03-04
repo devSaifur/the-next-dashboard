@@ -222,7 +222,7 @@ export const products = pgTable(
 )
 
 export const productsRelation = relations(products, ({ many, one }) => ({
-  image: many(images),
+  images: many(images),
   store: one(stores, {
     fields: [products.sizeId],
     references: [stores.id],
@@ -240,6 +240,8 @@ export const productsRelation = relations(products, ({ many, one }) => ({
     references: [colors.id],
   }),
 }))
+
+export type TProductSelectSchema = typeof products.$inferSelect
 
 export const images = pgTable(
   'image',
@@ -265,3 +267,5 @@ export const imagesRelation = relations(images, ({ one }) => ({
     references: [products.id],
   }),
 }))
+
+export type TImageSelectSchema = typeof images.$inferSelect
