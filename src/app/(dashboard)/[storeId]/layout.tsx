@@ -1,7 +1,7 @@
 import { Navbar } from '@/components/Navbar'
 import { getStoreById } from '@/data/store'
-import { getUser } from '@/auth/getUser'
 import { redirect } from 'next/navigation'
+import { checkAuth } from '@/auth/utils'
 
 export default async function Dashboard({
   children,
@@ -10,8 +10,7 @@ export default async function Dashboard({
   children: React.ReactNode
   params: { storeId: string }
 }) {
-  const user = await getUser()
-  if (!user) redirect('/sign-in')
+  await checkAuth()
 
   const store = await getStoreById(params.storeId)
 

@@ -6,7 +6,7 @@ import { users } from '@/db/schema'
 
 export async function getUserByEmail(email: string) {
   return await db.query.users.findFirst({
-    where: eq(users.email, email),
+    where: eq(users.email, email.toLowerCase()),
   })
 }
 

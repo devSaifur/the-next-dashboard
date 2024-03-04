@@ -15,32 +15,34 @@ export const login = action(SignInValidator, async (values) => {
   const validatedFields = SignInValidator.safeParse(values)
 
   if (!validatedFields.success) {
-    console.log(validatedFields.success)
     return { error: 'Invalid fields' }
   }
 
   const { email, password } = validatedFields.data
 
-  const existingUser = await getUserByEmail(email)
-
-  if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: 'Incorrect username or password' }
-  }
-
-  const validPassword = await new Argon2id().verify(
-    existingUser.password,
-    password
-  )
-
-  if (!validPassword) {
-    return {
-      error: 'Incorrect username or password',
-    }
-  }
-
   try {
+    const existingUser = await getUserByEmail(email)
+
+    if (!existingUser || !existingUser.email || !existingUser.password) {
+      return { error: 'Incorrect username or password' }
+    }
+
+    const validPassword = await new Argon2id().verify(
+      existingUser.password,
+      password
+    )
+
+    if (!validPassword) {
+      return {
+        error: 'Incorrect username or password',
+      }
+    }
+
     const session = await lucia.createSession(existingUser.id, {})
     const sessionCookie = lucia.createSessionCookie(session.id)
+
+    console.log({ session }, { sessionCookie })
+
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,

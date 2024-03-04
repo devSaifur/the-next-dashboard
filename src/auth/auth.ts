@@ -23,6 +23,7 @@ export const lucia = new Lucia(adapter, {
     return {
       // attributes has the type of DatabaseUserAttributes
       name: attributes.name,
+      email: attributes.email,
     }
   },
 })
@@ -70,4 +71,5 @@ declare module 'lucia' {
 
 interface DatabaseUserAttributes {
   name: string
+  email: string
 }

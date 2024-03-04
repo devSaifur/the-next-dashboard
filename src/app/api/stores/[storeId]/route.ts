@@ -1,5 +1,5 @@
 import { deleteStore, updateStore } from '@/data/store'
-import { getUser } from '@/auth/getUser'
+import { getUserAuth } from '@/auth/utils'
 
 import { NextResponse } from 'next/server'
 import { StoreSchema } from '@/lib/validators/ActionValidators'
@@ -17,17 +17,16 @@ export async function PATCH(
       return { error: 'Invalid fields' }
     }
 
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
     const { name } = validatedFields.data
     const { storeId } = params
-    const { userId } = user
 
-    const store = await updateStore(storeId, userId, name)
+    const store = await updateStore(storeId, session.user.id, name)
     return NextResponse.json(store)
   } catch (err) {
     console.error('[STORE_PATCH]', err)
@@ -46,9 +45,9 @@ export async function DELETE(
       return new NextResponse('Invalid fields', { status: 400 })
     }
 
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 

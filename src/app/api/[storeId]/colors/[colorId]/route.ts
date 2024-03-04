@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import { getUser } from '@/auth/getUser'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { ColorSchema } from '@/lib/validators/ActionValidators'
 import { deleteColorById, getColorById, updateColor } from '@/data/color'
+import { getUserAuth } from '@/auth/utils'
 
 export async function GET(
   req: Request,
@@ -29,20 +29,19 @@ export async function DELETE(
   { params }: { params: { colorId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
     const { storeId, colorId } = params
-    const { userId } = user
 
     if (!colorId) {
       return new NextResponse('Color id is required', { status: 400 })
     }
 
-    const usersStore = getStoreByStoreAndUserId(storeId, userId)
+    const usersStore = getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })
@@ -62,9 +61,9 @@ export async function PATCH(
   { params }: { params: { colorId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -88,7 +87,7 @@ export async function PATCH(
       return new NextResponse('Store is required', { status: 400 })
     }
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

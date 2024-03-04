@@ -5,7 +5,6 @@ import {
   text,
   varchar,
   uuid,
-  primaryKey,
   decimal,
   boolean,
   index,
@@ -22,7 +21,7 @@ export const session = pgTable('session', {
   id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at', {
     withTimezone: true,
     mode: 'date',
@@ -106,7 +105,7 @@ export const categories = pgTable(
   },
   (category) => {
     return {
-      categoriesBillboardIdx: index('idx_categories_product_id').on(
+      categoriesBillboardIdx: index('idx_categories_billboard_id').on(
         category.billboardId
       ),
       categoriesStoreIdx: index('idx_categories_store_id').on(category.storeId),
@@ -123,7 +122,7 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
     fields: [categories.billboardId],
     references: [billboards.id],
   }),
-  product: many(products),
+  products: many(products),
 }))
 
 export type TCategorySelectSchema = typeof categories.$inferSelect
@@ -217,13 +216,29 @@ export const products = pgTable(
         product.categoryId
       ),
       productsSizeIdx: index('idx_products_size_id').on(product.sizeId),
-      productsColorIdx: index('idx_products_color_id').on(product.categoryId),
+      productsColorIdx: index('idx_products_color_id').on(product.colorId),
     }
   }
 )
 
-export const productsRelation = relations(products, ({ many }) => ({
+export const productsRelation = relations(products, ({ many, one }) => ({
   image: many(images),
+  store: one(stores, {
+    fields: [products.sizeId],
+    references: [stores.id],
+  }),
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
+  size: one(sizes, {
+    fields: [products.sizeId],
+    references: [sizes.id],
+  }),
+  color: one(colors, {
+    fields: [products.colorId],
+    references: [colors.id],
+  }),
 }))
 
 export const images = pgTable(
@@ -245,7 +260,7 @@ export const images = pgTable(
 )
 
 export const imagesRelation = relations(images, ({ one }) => ({
-  image: one(products, {
+  product: one(products, {
     fields: [images.productId],
     references: [products.id],
   }),

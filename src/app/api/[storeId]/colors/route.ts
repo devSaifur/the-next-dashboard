@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server'
 
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { getUser } from '@/auth/getUser'
 import { ColorSchema } from '@/lib/validators/ActionValidators'
 import { createColor, getColorsByStoreId } from '@/data/color'
+import { getUserAuth } from '@/auth/utils'
 
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -32,7 +32,7 @@ export async function POST(
 
     const { name, value } = validatedFields.data
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

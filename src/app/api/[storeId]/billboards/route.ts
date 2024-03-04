@@ -1,6 +1,6 @@
 import { createBillboard, getBillboardsByStoreId } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { getUser } from '@/auth/getUser'
+import { getUserAuth } from '@/auth/utils'
 import { BillboardSchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
 
@@ -9,9 +9,9 @@ export async function POST(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -31,7 +31,7 @@ export async function POST(
 
     const { label, imageUrl } = validatedFields.data
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

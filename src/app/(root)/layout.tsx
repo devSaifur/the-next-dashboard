@@ -1,17 +1,17 @@
 import { redirect } from 'next/navigation'
 import { getStoreByUserId } from '@/data/store'
-import { getUser } from '@/auth/getUser'
+import { getUserAuth } from '@/auth/utils'
 
 export default async function SetupLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await getUser()
+  const { session } = await getUserAuth()
 
-  if (!user) redirect('/sign-in')
+  if (!session) redirect('/sign-in')
 
-  const store = await getStoreByUserId(user.userId)
+  const store = await getStoreByUserId(session.user.id)
 
   if (store) redirect(`/${store.id}`)
 

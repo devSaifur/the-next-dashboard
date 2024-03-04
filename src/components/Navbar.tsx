@@ -1,16 +1,14 @@
 import { MainNav } from '@/components/MainNav'
 import StoreSwitcher from '@/components/store-switcher'
 import { getAllStoreByUserId } from '@/data/store'
-import { getUser } from '@/auth/getUser'
 import { redirect } from 'next/navigation'
+import { getUserAuth } from '@/auth/utils'
 
 export const Navbar = async () => {
-  const user = await getUser()
-  if (!user) redirect('/sign-in')
+  const { session } = await getUserAuth()
+  if (!session) redirect('/sign-in')
 
-  const { userId } = user
-
-  const stores = await getAllStoreByUserId(userId)
+  const stores = await getAllStoreByUserId(session.user.id)
 
   return (
     <div className="border-b ">

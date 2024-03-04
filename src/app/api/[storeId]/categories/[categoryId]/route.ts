@@ -1,10 +1,10 @@
-import { getUser } from '@/auth/getUser'
 import {
   deleteCategory,
   getCategoryById,
   updateCategory,
 } from '@/data/category'
 import { getStoreByStoreAndUserId } from '@/data/store'
+import { getUserAuth } from '@/auth/utils'
 import { CategorySchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
 
@@ -33,9 +33,9 @@ export async function PATCH(
   { params }: { params: { categoryId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -53,9 +53,7 @@ export async function PATCH(
       return new NextResponse('Category id is required', { status: 400 })
     }
 
-    const { userId } = user
-
-    const usersStore = await getStoreByStoreAndUserId(storeId, userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })
@@ -77,9 +75,9 @@ export async function DELETE(
   { params }: { params: { categoryId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -89,9 +87,7 @@ export async function DELETE(
       return new NextResponse('Invalid fields', { status: 400 })
     }
 
-    const { userId } = user
-
-    const usersStore = await getStoreByStoreAndUserId(storeId, userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

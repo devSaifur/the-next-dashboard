@@ -1,6 +1,6 @@
-import { getUser } from '@/auth/getUser'
 import { createCategory, getCategories } from '@/data/category'
 import { getStoreByStoreAndUserId } from '@/data/store'
+import { getUserAuth } from '@/auth/utils'
 import { CategorySchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
 
@@ -29,9 +29,9 @@ export async function POST(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -44,13 +44,12 @@ export async function POST(
     }
 
     const { storeId } = params
-    const { userId } = user
 
     if (!storeId) {
       return new NextResponse('Missing queries', { status: 400 })
     }
 
-    const usersStore = getStoreByStoreAndUserId(storeId, userId)
+    const usersStore = getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })

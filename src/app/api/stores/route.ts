@@ -1,5 +1,5 @@
-import { getUser } from '@/auth/getUser'
 import { createStore } from '@/data/store'
+import { getUserAuth } from '@/auth/utils'
 import { StoreSchema } from '@/lib/validators/ActionValidators'
 import { NextResponse } from 'next/server'
 
@@ -13,9 +13,9 @@ export async function POST(req: Request) {
       return new NextResponse('Invalid fields', { status: 400 })
     }
 
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthorized', { status: 403 })
     }
 
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const store = await createStore({
       name,
-      userId: user.userId,
+      userId: session.user.id,
       updatedAt: new Date(),
     })
     return NextResponse.json(store)

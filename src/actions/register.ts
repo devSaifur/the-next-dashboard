@@ -44,10 +44,10 @@ export const register = action(SignUpValidator, async (values) => {
       sessionCookie.value,
       sessionCookie.attributes
     )
+    return redirect('/sign-in')
   } catch (err) {
     if (err instanceof Error) console.error(err.message)
     console.error(err)
     return { error: 'An unknown error occurred' }
   }
-  return redirect('/sign-in')
 })

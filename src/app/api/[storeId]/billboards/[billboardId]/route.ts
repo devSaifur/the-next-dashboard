@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { getUser } from '@/auth/getUser'
 import {
   deleteBillboardById,
   getBillboardById,
@@ -7,6 +6,7 @@ import {
 } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { BillboardSchema } from '@/lib/validators/ActionValidators'
+import { getUserAuth } from '@/auth/utils'
 
 export async function GET(
   req: Request,
@@ -31,9 +31,9 @@ export async function DELETE(
   { params }: { params: { billboardId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user?.userId) {
+    if (!session?.user) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -41,7 +41,7 @@ export async function DELETE(
       return new NextResponse('Billboard id is required', { status: 400 })
     }
 
-    const usersStore = getStoreByStoreAndUserId(params.storeId, user.userId)
+    const usersStore = getStoreByStoreAndUserId(params.storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })
@@ -61,9 +61,9 @@ export async function PATCH(
   { params }: { params: { billboardId: string; storeId: string } }
 ) {
   try {
-    const user = await getUser()
+    const { session } = await getUserAuth()
 
-    if (!user) {
+    if (!session) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
@@ -87,7 +87,7 @@ export async function PATCH(
       return new NextResponse('Store id is required', { status: 400 })
     }
 
-    const usersStore = await getStoreByStoreAndUserId(storeId, user.userId)
+    const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
     if (!usersStore) {
       return new NextResponse('Unauthorized', { status: 405 })
