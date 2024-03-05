@@ -2,7 +2,7 @@ import { deleteStore, updateStore } from '@/data/store'
 import { getUserAuth } from '@/auth/utils'
 
 import { NextResponse } from 'next/server'
-import { StoreSchema } from '@/lib/validators/ActionValidators'
+import { StoreSchema } from '@/lib/validators/FormValidators'
 
 export async function PATCH(
   req: Request,

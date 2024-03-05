@@ -45,9 +45,9 @@ export const ProductSchema = z.object({
       url: z.string().min(1, { message: 'Image is required' }),
     })
     .array(),
-  categoryId: z.string().min(1),
-  sizeId: z.string().min(1),
-  colorId: z.string().min(1),
+  categoryId: z.string().min(1, { message: 'Category is required' }),
+  sizeId: z.string().min(1, { message: 'Size is required' }),
+  colorId: z.string().min(1, { message: 'Color is required' }),
 })
 
 export type TProductSchema = z.infer<typeof ProductSchema>

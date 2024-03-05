@@ -12,7 +12,7 @@ import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { TSizeSelectSchema } from '@/db/schema'
-import { SizeSchema, TSizeSchema } from '@/lib/validators/ActionValidators'
+import { SizeSchema, TSizeSchema } from '@/lib/validators/FormValidators'
 import {
   Form,
   FormControl,

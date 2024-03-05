@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 import { useParams, useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 
-import { StoreSchema, TStoreSchema } from '@/lib/validators/ActionValidators'
+import { StoreSchema, TStoreSchema } from '@/lib/validators/FormValidators'
 import { TStoreInsertSchema } from '@/db/schema'
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'

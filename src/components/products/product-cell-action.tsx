@@ -29,15 +29,15 @@ export const CellAction = ({ data }: CellActionProps) => {
   const params = useParams()
 
   const storeId = params.storeId as string
-  const billboardId = data.id
+  const productId = data.id
 
-  const { mutate: deleteBillboard, isPending: isDeleting } = useMutation({
-    mutationKey: ['billboards'],
+  const { mutate: deleteProduct, isPending: isDeleting } = useMutation({
+    mutationKey: ['products'],
     mutationFn: async () =>
-      await axios.delete(`/api/${storeId}/billboards/${billboardId}`),
+      await axios.delete(`/api/${storeId}/products/${productId}`),
     onSuccess: () => {
       setOpen(false)
-      toast.success('Billboard deleted successfully')
+      toast.success('Product deleted successfully')
       router.refresh()
     },
     onError: (err) => {
@@ -51,15 +51,15 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   function onCopy(id: string) {
     navigator.clipboard.writeText(id)
-    toast.success('Billboard id copied to the clipboard')
+    toast.success('Product id copied to the clipboard')
   }
 
   function onUpdate() {
-    router.push(`/${storeId}/billboards/${billboardId}`)
+    router.push(`/${storeId}/products/${productId}`)
   }
 
   function onDelete() {
-    deleteBillboard()
+    deleteProduct()
   }
 
   return (

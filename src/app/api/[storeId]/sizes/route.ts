@@ -1,5 +1,5 @@
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { SizeSchema } from '@/lib/validators/ActionValidators'
+import { SizeSchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
 import { createSize, getSizesByStoreId } from '@/data/size'
 import { getUserAuth } from '@/auth/utils'

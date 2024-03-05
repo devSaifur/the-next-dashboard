@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { sizes } from '@/db/schema'
-import { TSizeSchema } from '@/lib/validators/ActionValidators'
+import { TSizeSchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
 
 export async function getSizeById(id: string | null) {

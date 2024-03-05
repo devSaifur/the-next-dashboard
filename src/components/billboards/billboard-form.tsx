@@ -15,7 +15,7 @@ import { TBillboardSelectSchema } from '@/db/schema'
 import {
   BillboardSchema,
   TBillboardSchema,
-} from '@/lib/validators/ActionValidators'
+} from '@/lib/validators/FormValidators'
 import {
   Form,
   FormControl,

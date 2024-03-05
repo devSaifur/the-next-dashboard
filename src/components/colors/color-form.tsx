@@ -12,7 +12,7 @@ import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { TColorSelectSchema } from '@/db/schema'
-import { ColorSchema, TColorSchema } from '@/lib/validators/ActionValidators'
+import { ColorSchema, TColorSchema } from '@/lib/validators/FormValidators'
 import {
   Form,
   FormControl,

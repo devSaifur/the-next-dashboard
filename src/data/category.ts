@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { TCategoryInsertSchema, categories } from '@/db/schema'
-import { TCategorySchema } from '@/lib/validators/ActionValidators'
+import { TCategorySchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
 
 export async function getCategoriesByStoreId(storeId: string) {

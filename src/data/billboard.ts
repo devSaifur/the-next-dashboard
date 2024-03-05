@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { billboards } from '@/db/schema'
-import { TBillboardSchema } from '@/lib/validators/ActionValidators'
+import { TBillboardSchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
 
 export async function getBillboardById(id: string | null) {
@@ -22,14 +22,14 @@ export async function getBillboardsByStoreId(storeId: string) {
 }
 
 export async function createBillboard(
-  values: TBillboardSchema,
-  storeId: string
+  values: TBillboardSchema & {
+    storeId: string
+  }
 ) {
   const billboardArr = await db
     .insert(billboards)
     .values({
       updatedAt: new Date(),
-      storeId,
       ...values,
     })
     .returning()

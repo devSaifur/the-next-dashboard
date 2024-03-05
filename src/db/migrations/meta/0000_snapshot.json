@@ -1,5 +1,5 @@
 {
-  "id": "6ce01973-b42f-45d6-917b-cd9c3b1cce81",
+  "id": "dfacc724-7986-4662-9b64-75e1804c3f7d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -118,8 +118,8 @@
         }
       },
       "indexes": {
-        "idx_categories_product_id": {
-          "name": "idx_categories_product_id",
+        "idx_categories_billboard_id": {
+          "name": "idx_categories_billboard_id",
           "columns": [
             "billboard_id"
           ],
@@ -398,7 +398,7 @@
         "idx_products_color_id": {
           "name": "idx_products_color_id",
           "columns": [
-            "category_id"
+            "color_id"
           ],
           "isUnique": false
         }
@@ -495,7 +495,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

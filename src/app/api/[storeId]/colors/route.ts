@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { ColorSchema } from '@/lib/validators/ActionValidators'
+import { ColorSchema } from '@/lib/validators/FormValidators'
 import { createColor, getColorsByStoreId } from '@/data/color'
 import { getUserAuth } from '@/auth/utils'
 

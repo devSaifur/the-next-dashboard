@@ -34,7 +34,7 @@ import {
 import {
   CategorySchema,
   TCategorySchema,
-} from '@/lib/validators/ActionValidators'
+} from '@/lib/validators/FormValidators'
 
 interface CategoryFormProps {
   initialData: TCategorySchema | undefined

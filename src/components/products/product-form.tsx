@@ -18,10 +18,7 @@ import {
   TProductSelectSchema,
   TSizeSelectSchema,
 } from '@/db/schema'
-import {
-  ProductSchema,
-  TProductSchema,
-} from '@/lib/validators/ActionValidators'
+import { ProductSchema, TProductSchema } from '@/lib/validators/FormValidators'
 import {
   Form,
   FormControl,
@@ -376,7 +373,7 @@ export const ProductForm = ({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Featured</FormLabel>
+                    <FormLabel>Archived</FormLabel>
                     <FormDescription>
                       This product will not appear anywhere in the store.
                     </FormDescription>

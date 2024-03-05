@@ -5,7 +5,7 @@ import {
   updateBillboard,
 } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { BillboardSchema } from '@/lib/validators/ActionValidators'
+import { BillboardSchema } from '@/lib/validators/FormValidators'
 import { getUserAuth } from '@/auth/utils'
 
 export async function GET(

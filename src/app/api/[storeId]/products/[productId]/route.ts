@@ -1,44 +1,48 @@
 import { NextResponse } from 'next/server'
 import { getStoreByStoreAndUserId } from '@/data/store'
-import { SizeSchema } from '@/lib/validators/FormValidators'
-import { deleteSizeById, getSizeById, updateSize } from '@/data/size'
+import { ProductSchema } from '@/lib/validators/FormValidators'
 import { getUserAuth } from '@/auth/utils'
+import {
+  deleteProductById,
+  getProductById,
+  updateProduct,
+} from '@/data/product'
 
 export async function GET(
   req: Request,
-  { params }: { params: { sizeId: string } }
+  { params }: { params: { productId: string } }
 ) {
   try {
-    const { sizeId } = params
+    const { productId } = params
 
-    if (!sizeId) {
-      return new NextResponse('Billboard id is required', { status: 400 })
+    if (!productId) {
+      return new NextResponse('Product d is required', { status: 400 })
     }
 
-    const size = await getSizeById(sizeId)
+    const product = await getProductById(productId)
 
-    return NextResponse.json(size)
+    return NextResponse.json(product)
   } catch (err) {
-    console.log('[SIZE_GET]', err)
+    console.error('[PRODUCT_GET]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } }
+  { params }: { params: { productId: string; storeId: string } }
 ) {
   try {
     const { session } = await getUserAuth()
 
-    if (!session) {
+    if (!session?.user) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
-    const { storeId, sizeId } = params
+    const { productId, storeId } = params
 
-    if (!sizeId) {
-      return new NextResponse('Billboard id is required', { status: 400 })
+    if (!productId) {
+      return new NextResponse('Product is required', { status: 400 })
     }
 
     const usersStore = getStoreByStoreAndUserId(storeId, session.user.id)
@@ -47,18 +51,18 @@ export async function DELETE(
       return new NextResponse('Unauthorized', { status: 405 })
     }
 
-    const billboard = await deleteSizeById(sizeId)
+    const product = await deleteProductById(productId)
 
-    return NextResponse.json(billboard)
+    return NextResponse.json(product)
   } catch (err) {
-    console.error('[SIZE_DELETE]', err)
+    console.error('[PRODUCT_DELETE]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } }
+  { params }: { params: { productId: string; storeId: string } }
 ) {
   try {
     const { session } = await getUserAuth()
@@ -69,18 +73,18 @@ export async function PATCH(
 
     const body = await req.json()
 
-    const validatedFields = SizeSchema.safeParse(body)
+    const validatedFields = ProductSchema.safeParse(body)
 
     if (!validatedFields.success) {
       return new NextResponse('Invalid fields', { status: 400 })
     }
 
-    const { name, value } = validatedFields.data
+    const { data } = validatedFields
 
-    const { sizeId, storeId } = params
+    const { productId, storeId } = params
 
-    if (!sizeId) {
-      return new NextResponse('Size is required', { status: 400 })
+    if (!productId) {
+      return new NextResponse('Product is required', { status: 400 })
     }
 
     if (!storeId) {
@@ -93,11 +97,11 @@ export async function PATCH(
       return new NextResponse('Unauthorized', { status: 405 })
     }
 
-    const updatedSize = await updateSize({ name, value }, sizeId)
+    const updatedProduct = await updateProduct({ productId, ...data })
 
-    return NextResponse.json(updatedSize)
+    return NextResponse.json(updatedProduct)
   } catch (err) {
-    console.error('[SIZE_PATCH]', err)
+    console.error('[PRODUCT_PATCH]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }

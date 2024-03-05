@@ -78,14 +78,14 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_billboards_store_id" ON "billboard" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_categories_product_id" ON "category" ("billboard_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_categories_billboard_id" ON "category" ("billboard_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_categories_store_id" ON "category" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_colors_store_id" ON "color" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_images_product_id" ON "image" ("product_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_store_id" ON "product" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_category_id" ON "product" ("category_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_size_id" ON "product" ("size_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_products_color_id" ON "product" ("category_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_products_color_id" ON "product" ("color_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_sizes_store_id" ON "size" ("store_id");--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "billboard" ADD CONSTRAINT "billboard_store_id_store_id_fk" FOREIGN KEY ("store_id") REFERENCES "store"("id") ON DELETE cascade ON UPDATE no action;
@@ -142,7 +142,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

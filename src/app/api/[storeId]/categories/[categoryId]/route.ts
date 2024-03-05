@@ -5,7 +5,7 @@ import {
 } from '@/data/category'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { getUserAuth } from '@/auth/utils'
-import { CategorySchema } from '@/lib/validators/ActionValidators'
+import { CategorySchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
 
 export async function GET(

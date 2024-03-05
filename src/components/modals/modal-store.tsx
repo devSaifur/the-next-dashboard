@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { StoreSchema, TStoreSchema } from '@/lib/validators/ActionValidators'
+import { StoreSchema, TStoreSchema } from '@/lib/validators/FormValidators'
 import { useMutation } from '@tanstack/react-query'
 
 export const StoreModal = () => {

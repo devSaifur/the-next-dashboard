@@ -1,7 +1,7 @@
 import { createBillboard, getBillboardsByStoreId } from '@/data/billboard'
 import { getStoreByStoreAndUserId } from '@/data/store'
 import { getUserAuth } from '@/auth/utils'
-import { BillboardSchema } from '@/lib/validators/ActionValidators'
+import { BillboardSchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
 
 export async function POST(
@@ -37,7 +37,7 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 405 })
     }
 
-    const billboard = await createBillboard({ label, imageUrl }, storeId)
+    const billboard = await createBillboard({ label, imageUrl, storeId })
 
     return NextResponse.json(billboard)
   } catch (err) {

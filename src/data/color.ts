@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { colors } from '@/db/schema'
-import { TColorSchema } from '@/lib/validators/ActionValidators'
+import { TColorSchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
 
 export async function getColorById(id: string | null) {

@@ -1,6 +1,6 @@
 import { createStore } from '@/data/store'
 import { getUserAuth } from '@/auth/utils'
-import { StoreSchema } from '@/lib/validators/ActionValidators'
+import { StoreSchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
