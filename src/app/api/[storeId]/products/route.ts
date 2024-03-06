@@ -2,7 +2,7 @@ import { getStoreByStoreAndUserId } from '@/data/store'
 import { getUserAuth } from '@/auth/utils'
 import { ProductSchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
-import { createProduct } from '@/data/product'
+import { createProduct, getFilteredProducts } from '@/data/product'
 import { db } from '@/db'
 import { and, eq } from 'drizzle-orm'
 import { products } from '@/db/schema'
@@ -69,49 +69,26 @@ export async function GET(
     const colorId = searchParams.get('colorId') as string
     const isFeatured = searchParams.get('isFeatured') as string
 
-    const productsRes = await db.query.products.findMany({
-      where: and(
-        eq(products.storeId, storeId),
-        eq(products.isArchived, false),
-        eq(products.categoryId, categoryId),
-        eq(products.sizeId, sizeId),
-        eq(products.colorId, colorId),
-        eq(products.isFeatured, isFeatured ? true : false)
-      ),
-      columns: {
-        id: true,
-        name: true,
-        price: true,
-      },
-      with: {
-        images: {
-          columns: {
-            id: true,
-            url: true,
-          },
-        },
-        category: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-        color: {
-          columns: {
-            id: true,
-            name: true,
-            value: true,
-          },
-        },
-        size: {
-          columns: {
-            id: true,
-            name: true,
-            value: true,
-          },
-        },
-      },
-    })
+    let filter
+
+    switch (true) {
+      case !!categoryId:
+        filter = eq(products.categoryId, categoryId)
+        break
+      case !!sizeId:
+        filter = eq(products.sizeId, sizeId)
+        break
+      case !!colorId:
+        filter = eq(products.colorId, colorId)
+        break
+      case !!isFeatured:
+        filter = eq(products.isFeatured, isFeatured ? true : false)
+        break
+      default:
+        break
+    }
+
+    const productsRes = await getFilteredProducts(filter, storeId)
 
     return NextResponse.json(productsRes)
   } catch (err) {

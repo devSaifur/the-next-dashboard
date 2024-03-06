@@ -1,10 +1,52 @@
 import 'server-only'
-import { desc, eq } from 'drizzle-orm'
+import { and, desc, eq, type SQL } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { products, images, TImageSelectSchema } from '@/db/schema'
 import { TProductSchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
+
+export async function getFilteredProducts(
+  filter: SQL<unknown> | undefined,
+  storeId: string
+) {
+  return await db.query.products.findMany({
+    where: and(eq(products.storeId, storeId), filter),
+    columns: {
+      id: true,
+      name: true,
+      price: true,
+    },
+    with: {
+      images: {
+        columns: {
+          id: true,
+          url: true,
+        },
+      },
+      category: {
+        columns: {
+          id: true,
+          name: true,
+        },
+      },
+      color: {
+        columns: {
+          id: true,
+          name: true,
+          value: true,
+        },
+      },
+      size: {
+        columns: {
+          id: true,
+          name: true,
+          value: true,
+        },
+      },
+    },
+  })
+}
 
 export async function getProductsByStoreId(storeId: string) {
   return await db.query.products.findMany({

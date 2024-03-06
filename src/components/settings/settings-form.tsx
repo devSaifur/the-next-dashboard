@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { AlertModal } from '@/components/modals/alert-modals'
+import { ApiAlert } from '@/components/api-alert'
+import { useOrigin } from '@/hooks/use-origin'
 
 interface SettingsFormProps {
   initialData: TStoreInsertSchema
@@ -33,6 +35,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const params = useParams()
+  const origin = useOrigin()
 
   const storeId = params.storeId
 
@@ -129,6 +132,12 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
             Save changes
           </Button>
         </form>
+        <Separator />
+        <ApiAlert
+          title="NEXT_PUBLIC_API_URL"
+          variant="public"
+          description={`${origin}/api/${params.storeId}`}
+        />
       </Form>
     </>
   )
