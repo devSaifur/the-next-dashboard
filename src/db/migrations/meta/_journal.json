@@ -8,6 +8,13 @@
       "when": 1709637313724,
       "tag": "0000_hot_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1709718584017,
+      "tag": "0001_clever_zaladane",
+      "breakpoints": true
     }
   ]
 }

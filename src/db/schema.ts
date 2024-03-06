@@ -49,6 +49,7 @@ export const storesRelations = relations(stores, ({ many }) => ({
   sizes: many(sizes),
   colors: many(colors),
   products: many(products),
+  orders: many(orders),
 }))
 
 export type TStoreInsertSchema = typeof stores.$inferInsert
@@ -223,6 +224,7 @@ export const products = pgTable(
 
 export const productsRelation = relations(products, ({ many, one }) => ({
   images: many(images),
+  orderItems: many(orderItems),
   store: one(stores, {
     fields: [products.sizeId],
     references: [stores.id],
@@ -271,3 +273,61 @@ export const imagesRelation = relations(images, ({ one }) => ({
 
 export type TImageSelectSchema = typeof images.$inferSelect
 export type TImageInsertSchema = typeof images.$inferInsert
+
+export const orders = pgTable(
+  'order',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    phone: varchar('phone', { length: 15 }).notNull(),
+    address: varchar('address', { length: 155 }).notNull(),
+    isPaid: boolean('isPaid').default(false).notNull(),
+    storeId: uuid('store_id')
+      .references(() => stores.id)
+      .notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
+  },
+  (order) => {
+    return {
+      ordersStoreIdx: index('idx_orders_store_id').on(order.storeId),
+    }
+  }
+)
+
+export const ordersRelation = relations(orders, ({ one, many }) => ({
+  store: one(stores, {
+    fields: [orders.storeId],
+    references: [stores.id],
+  }),
+  orderItems: many(orderItems),
+}))
+
+export const orderItems = pgTable(
+  'order_item',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    orderId: uuid('order_id')
+      .references(() => orders.id)
+      .notNull(),
+    productId: uuid('product_id').references(() => products.id),
+  },
+  (orderItem) => {
+    return {
+      orderItemOrderIdx: index('idx_order_item_order_id').on(orderItem.orderId),
+      orderItemProductIdx: index('idx_order_item_product_id').on(
+        orderItem.productId
+      ),
+    }
+  }
+)
+
+export const orderItemsRelation = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderItems.productId],
+    references: [products.id],
+  }),
+}))
