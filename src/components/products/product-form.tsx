@@ -312,7 +312,7 @@ export const ProductForm = ({
               name="colorId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Size</FormLabel>
+                  <FormLabel>Color</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}

@@ -278,8 +278,8 @@ export const orders = pgTable(
   'order',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    phone: varchar('phone', { length: 15 }).notNull(),
-    address: varchar('address', { length: 155 }).notNull(),
+    phone: varchar('phone', { length: 15 }),
+    address: varchar('address', { length: 155 }),
     isPaid: boolean('isPaid').default(false).notNull(),
     storeId: uuid('store_id')
       .references(() => stores.id)
@@ -302,6 +302,8 @@ export const ordersRelation = relations(orders, ({ one, many }) => ({
   orderItems: many(orderItems),
 }))
 
+export type TOrderInsertSchema = typeof orders.$inferInsert
+
 export const orderItems = pgTable(
   'order_item',
   {
@@ -309,7 +311,9 @@ export const orderItems = pgTable(
     orderId: uuid('order_id')
       .references(() => orders.id)
       .notNull(),
-    productId: uuid('product_id').references(() => products.id),
+    productId: uuid('product_id')
+      .references(() => products.id)
+      .notNull(),
   },
   (orderItem) => {
     return {

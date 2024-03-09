@@ -16,7 +16,7 @@ export async function GET(
     const { productId } = params
 
     if (!productId) {
-      return new NextResponse('Product d is required', { status: 400 })
+      return new NextResponse('Product is required', { status: 400 })
     }
 
     const product = await getProductById(productId)

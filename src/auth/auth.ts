@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 
 import { db } from '@/db'
 import { session, users } from '@/db/schema'
+import { env } from '@/lib/env'
 
 const adapter = new DrizzlePostgreSQLAdapter(db, session, users)
 
@@ -16,7 +17,7 @@ export const lucia = new Lucia(adapter, {
     // expires: false,
     attributes: {
       // set to `true` when using HTTPS
-      secure: process.env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
     },
   },
   getUserAttributes: (attributes) => {

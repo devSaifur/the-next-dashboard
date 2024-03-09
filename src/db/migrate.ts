@@ -1,9 +1,10 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { Pool } from 'pg'
 import { db } from '@/db'
+import { env } from '@/lib/env'
 
 const main = async () => {
-  const poll = new Pool({ connectionString: process.env.DATABASE_URL! })
+  const poll = new Pool({ connectionString: env.DATABASE_URL })
 
   console.log('Migration running')
 

@@ -2,7 +2,11 @@
  * Routes that are available for everyone, and doesn't require authentication
  * @type {string[]}
  *  */
-export const publicRoutes: string[] = ['/', '/new-verification']
+export const publicRoutes: string[] = [
+  '/',
+  '/new-verification',
+  '/api/webhooks/stripe',
+]
 
 /**
  * Routes that are used for authentication, those routes will redirect users to /

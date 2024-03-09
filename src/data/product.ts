@@ -1,17 +1,14 @@
 import 'server-only'
-import { and, desc, eq, type SQL } from 'drizzle-orm'
+import { desc, eq, inArray } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { products, images, TImageSelectSchema } from '@/db/schema'
+import { products, images, TImageSelectSchema, categories } from '@/db/schema'
 import { TProductSchema } from '@/lib/validators/FormValidators'
 import { getFirstObject } from '@/utils/helpers'
 
-export async function getFilteredProducts(
-  filter: SQL<unknown> | undefined,
-  storeId: string
-) {
+export async function getFilteredProducts(filter: any) {
   return await db.query.products.findMany({
-    where: and(eq(products.storeId, storeId), filter),
+    where: filter,
     columns: {
       id: true,
       name: true,
@@ -66,6 +63,26 @@ export async function getProductById(id: string | null) {
       where: eq(products.id, id),
       with: {
         images: true,
+        category: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+        color: {
+          columns: {
+            id: true,
+            name: true,
+            value: true,
+          },
+        },
+        size: {
+          columns: {
+            id: true,
+            name: true,
+            value: true,
+          },
+        },
       },
     })
   }
@@ -188,5 +205,11 @@ export async function updateProduct(
       images: imageResArr,
       ...product,
     }
+  })
+}
+
+export async function getProductsByIds(ids: string[]) {
+  return db.query.products.findMany({
+    where: inArray(products.id, [...ids]),
   })
 }

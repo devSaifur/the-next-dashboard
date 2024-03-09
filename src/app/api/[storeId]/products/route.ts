@@ -3,8 +3,7 @@ import { getUserAuth } from '@/auth/utils'
 import { ProductSchema } from '@/lib/validators/FormValidators'
 import { NextResponse } from 'next/server'
 import { createProduct, getFilteredProducts } from '@/data/product'
-import { db } from '@/db'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, type SQL } from 'drizzle-orm'
 import { products } from '@/db/schema'
 
 export async function POST(
@@ -33,8 +32,6 @@ export async function POST(
     }
 
     const { data } = validatedFields
-
-    console.log({ data })
 
     const usersStore = await getStoreByStoreAndUserId(storeId, session.user.id)
 
@@ -69,26 +66,28 @@ export async function GET(
     const colorId = searchParams.get('colorId') as string
     const isFeatured = searchParams.get('isFeatured') as string
 
-    let filter
+    let filter = null
 
-    switch (true) {
-      case !!categoryId:
-        filter = eq(products.categoryId, categoryId)
-        break
-      case !!sizeId:
-        filter = eq(products.sizeId, sizeId)
-        break
-      case !!colorId:
-        filter = eq(products.colorId, colorId)
-        break
-      case !!isFeatured:
-        filter = eq(products.isFeatured, isFeatured ? true : false)
-        break
-      default:
-        break
+    const conditions = []
+
+    if (categoryId) {
+      conditions.push(eq(products.categoryId, categoryId))
+    }
+    if (sizeId) {
+      conditions.push(eq(products.sizeId, sizeId))
+    }
+    if (colorId) {
+      conditions.push(eq(products.colorId, colorId))
+    }
+    if (isFeatured) {
+      conditions.push(eq(products.isFeatured, isFeatured === 'true'))
     }
 
-    const productsRes = await getFilteredProducts(filter, storeId)
+    if (conditions.length > 0) {
+      filter = and(eq(products.storeId, storeId), ...conditions)
+    }
+
+    const productsRes = await getFilteredProducts(filter)
 
     return NextResponse.json(productsRes)
   } catch (err) {
