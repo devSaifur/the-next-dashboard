@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { ModalProvider } from '@/providers/ModalProvider'
 import { Toaster } from '@/components/ui/sonner'
 import TanstackProvider from '@/providers/TanstackProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'The Next Shop',
@@ -22,7 +23,9 @@ export default function RootLayout({
         <Toaster />
         <TanstackProvider>
           <ModalProvider />
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="system">
+            {children}
+          </ThemeProvider>
         </TanstackProvider>
       </body>
     </html>

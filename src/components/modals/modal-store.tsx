@@ -4,7 +4,6 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 
 import { Modal } from '@/components/ui/modal'
 import { useModalStore } from '@/hooks/use-modal-store'
@@ -23,7 +22,6 @@ import { useMutation } from '@tanstack/react-query'
 
 export const StoreModal = () => {
   const { isOpen, onClose } = useModalStore()
-  const router = useRouter()
 
   const form = useForm<TStoreSchema>({
     resolver: zodResolver(StoreSchema),
@@ -36,9 +34,10 @@ export const StoreModal = () => {
     mutationKey: ['stores'],
     mutationFn: async (data: TStoreSchema) => axios.post('/api/stores', data),
     onSuccess: () => {
-      onClose()
-      toast.success('Store created successfully')
-      router.refresh()
+      window.location.reload()
+    },
+    onError: () => {
+      toast.error('Something went wrong. Please try again.')
     },
   })
 

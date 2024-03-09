@@ -48,6 +48,6 @@ export const register = action(SignUpValidator, async (values) => {
   } catch (err) {
     if (err instanceof Error) console.error(err.message)
     console.error(err)
-    return { error: 'An unknown error occurred' }
+    throw err
   }
 })

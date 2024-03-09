@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { NextResponse } from 'next/server'
 import { getProductsByIds } from '@/data/product'
-import { createOrder } from '@/data/order'
+import { initiateOrder } from '@/data/order'
 import { env } from '@/lib/env'
 
 const corsHeaders: HeadersInit = {
@@ -45,10 +45,10 @@ export async function POST(
 
   const { storeId } = params
 
-  const order = await createOrder({ storeId, productIds })
+  const order = await initiateOrder({ storeId, productIds })
 
   if (!order) {
-    return new NextResponse('Could not create order', { status: 400 })
+    return new NextResponse('Could not initiate order', { status: 400 })
   }
 
   const session = await stripe.checkout.sessions.create({

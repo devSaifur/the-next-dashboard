@@ -12,15 +12,18 @@ export async function logout() {
       error: 'Unauthorized',
     }
   }
+  try {
+    await lucia.invalidateSession(session.id)
 
-  await lucia.invalidateSession(session.id)
+    const sessionCookie = lucia.createBlankSessionCookie()
 
-  const sessionCookie = lucia.createBlankSessionCookie()
-
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  )
-  return redirect('/sign-in')
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    )
+    return redirect('/sign-in')
+  } catch (err) {
+    throw err
+  }
 }

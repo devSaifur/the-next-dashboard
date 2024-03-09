@@ -2,7 +2,7 @@ import 'server-only'
 import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { TOrderInsertSchema, orderItems, orders } from '@/db/schema'
+import { TOrderInsertSchema, orderItems, orders, products } from '@/db/schema'
 import { getFirstObject } from '@/utils/helpers'
 
 export async function getOrderByStoreId(storeId: string) {
@@ -19,12 +19,10 @@ export async function getOrderByStoreId(storeId: string) {
   })
 }
 
-type OrderInsert = {
+export async function initiateOrder(value: {
   storeId: string
   productIds: string[]
-}
-
-export async function createOrder(value: OrderInsert) {
+}) {
   const { storeId, productIds } = value
 
   return await db.transaction(async (tx) => {
@@ -40,5 +38,36 @@ export async function createOrder(value: OrderInsert) {
     })
 
     return getFirstObject(orderArr)
+  })
+}
+
+export async function createOrder(value: {
+  orderId: string
+  addressString: string
+  phone: string | null
+}) {
+  const { orderId, addressString, phone } = value
+
+  const order = await db
+    .update(orders)
+    .set({
+      phone,
+      isPaid: true,
+      address: addressString,
+    })
+    .where(eq(orders.id, orderId))
+    .returning()
+
+  const orderItemsRes = await db.query.orderItems.findMany({
+    where: eq(orderItems.orderId, order[0].id),
+  })
+
+  const productIds = orderItemsRes.map((orderItem) => orderItem.productId)
+
+  productIds.forEach(async (productId) => {
+    await db
+      .update(products)
+      .set({ isArchived: true })
+      .where(eq(products.id, productId))
   })
 }

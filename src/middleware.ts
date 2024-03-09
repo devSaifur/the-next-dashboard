@@ -4,11 +4,12 @@ import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (
+    // skip checks for payment routes
     request.nextUrl.pathname.match(
       /api\/webhooks\/stripe|api\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/checkout/
     )
   ) {
-    return NextResponse.next() // Skip checks for excluded routes
+    return NextResponse.next()
   }
 
   // Just in case, For API routes, since Next.js does not implement CSRF protection for API routes,

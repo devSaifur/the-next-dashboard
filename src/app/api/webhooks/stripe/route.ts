@@ -1,10 +1,10 @@
-import { db } from '@/db'
-import { orderItems, orders, products } from '@/db/schema'
-import { stripe } from '@/lib/stripe'
-import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+
+import { createOrder } from '@/data/order'
+import { stripe } from '@/lib/stripe'
+import { env } from '@/lib/env'
 
 export async function POST(req: Request) {
   const body = await req.text()
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      env.STRIPE_WEBHOOK_SECRET
     )
   } catch (err) {
     return new Response(
@@ -27,6 +27,7 @@ export async function POST(req: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session
   const address = session.customer_details?.address
+  const phone = session.customer_details?.phone || null
 
   const addressComponent = [
     address?.line1,
@@ -41,32 +42,9 @@ export async function POST(req: Request) {
 
   const orderId = session.metadata?.orderId as string
 
-  console.log({ orderId })
-
   switch (event.type) {
     case 'checkout.session.completed':
-      const order = await db
-        .update(orders)
-        .set({
-          isPaid: true,
-          address: addressString,
-          phone: session.customer_details?.phone || '',
-        })
-        .where(eq(orders.id, orderId))
-        .returning()
-
-      const orderItemsRes = await db.query.orderItems.findMany({
-        where: eq(orderItems.orderId, order[0].id),
-      })
-
-      const productIds = orderItemsRes.map((orderItem) => orderItem.productId)
-
-      productIds.forEach(async (productId) => {
-        await db
-          .update(products)
-          .set({ isArchived: true })
-          .where(eq(products.id, productId))
-      })
+      await createOrder({ orderId, addressString, phone })
       break
     default:
       console.log(`Unhandled event type ${event.type}`)
