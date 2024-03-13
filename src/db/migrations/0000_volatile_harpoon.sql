@@ -33,6 +33,22 @@ CREATE TABLE IF NOT EXISTS "image" (
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "order_item" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"order_id" uuid NOT NULL,
+	"product_id" uuid NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "order" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"phone" varchar(15),
+	"address" varchar(155),
+	"isPaid" boolean DEFAULT false NOT NULL,
+	"store_id" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "product" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -82,6 +98,9 @@ CREATE INDEX IF NOT EXISTS "idx_categories_billboard_id" ON "category" ("billboa
 CREATE INDEX IF NOT EXISTS "idx_categories_store_id" ON "category" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_colors_store_id" ON "color" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_images_product_id" ON "image" ("product_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_order_item_order_id" ON "order_item" ("order_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_order_item_product_id" ON "order_item" ("product_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_orders_store_id" ON "order" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_store_id" ON "product" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_category_id" ON "product" ("category_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_products_size_id" ON "product" ("size_id");--> statement-breakpoint
@@ -113,6 +132,24 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "image" ADD CONSTRAINT "image_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "order_item" ADD CONSTRAINT "order_item_order_id_order_id_fk" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "order_item" ADD CONSTRAINT "order_item_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "order" ADD CONSTRAINT "order_store_id_store_id_fk" FOREIGN KEY ("store_id") REFERENCES "store"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

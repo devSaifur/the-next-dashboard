@@ -1,11 +1,10 @@
-import { drizzle } from 'drizzle-orm/node-postgres'
-import pg from 'pg'
-import * as schema from '@/db/schema'
+import { type NeonQueryFunction, neon } from '@neondatabase/serverless'
+import { drizzle } from 'drizzle-orm/neon-http'
 import { env } from '@/lib/env'
 
-// const sql = neon(process.env.DATABASE_URL!)
-// export const db = drizzle(sql, { schema })
+import * as schema from './schema'
 
-const poll = new pg.Pool({ connectionString: env.DATABASE_URL })
-
-export const db = drizzle(poll, { schema })
+const sql = neon(env.DATABASE_URL)
+export const db = drizzle(sql as NeonQueryFunction<boolean, boolean>, {
+  schema,
+})
