@@ -101,46 +101,44 @@ export async function createProduct(
     storeId,
   } = value
 
-  return await db.transaction(async (tx) => {
-    const productArr = await tx
-      .insert(products)
+  const productArr = await db
+    .insert(products)
+    .values({
+      price: price.toString(),
+      updatedAt: new Date(),
+      name,
+      categoryId,
+      colorId,
+      sizeId,
+      storeId,
+      isArchived,
+      isFeatured,
+    })
+    .returning()
+
+  const [product] = productArr
+
+  const productId = product.id
+
+  let imageResArr: TImageSelectSchema[] = []
+
+  value.images.forEach(async (image) => {
+    const imageRes = await db
+      .insert(images)
       .values({
-        price: price.toString(),
+        productId,
         updatedAt: new Date(),
-        name,
-        categoryId,
-        colorId,
-        sizeId,
-        storeId,
-        isArchived,
-        isFeatured,
+        url: image.url,
       })
       .returning()
 
-    const [product] = productArr
-
-    const productId = product.id
-
-    let imageResArr: TImageSelectSchema[] = []
-
-    value.images.forEach(async (image) => {
-      const imageRes = await tx
-        .insert(images)
-        .values({
-          productId,
-          updatedAt: new Date(),
-          url: image.url,
-        })
-        .returning()
-
-      imageRes.push(imageRes[0])
-    })
-
-    return {
-      images: imageResArr,
-      ...product,
-    }
+    imageRes.push(imageRes[0])
   })
+
+  return {
+    images: imageResArr,
+    ...product,
+  }
 }
 
 export async function deleteProductById(productId: string) {
@@ -167,48 +165,46 @@ export async function updateProduct(
     productId,
   } = value
 
-  return await db.transaction(async (tx) => {
-    await tx.delete(images).where(eq(images.productId, productId))
+  await db.delete(images).where(eq(images.productId, productId))
 
-    const productArr = await tx
-      .update(products)
-      .set({
-        price: price.toString(),
+  const productArr = await db
+    .update(products)
+    .set({
+      price: price.toString(),
+      updatedAt: new Date(),
+      name,
+      categoryId,
+      colorId,
+      sizeId,
+      isArchived,
+      isFeatured,
+    })
+    .where(eq(products.id, productId))
+    .returning()
+
+  const [product] = productArr
+
+  let imageResArr: TImageSelectSchema[] = []
+
+  value.images.forEach(async (img) => {
+    const imageArr = await db
+      .insert(images)
+      .values({
         updatedAt: new Date(),
-        name,
-        categoryId,
-        colorId,
-        sizeId,
-        isArchived,
-        isFeatured,
+        url: img.url,
+        productId,
       })
-      .where(eq(products.id, productId))
       .returning()
 
-    const [product] = productArr
+    const [image] = imageArr
 
-    let imageResArr: TImageSelectSchema[] = []
-
-    value.images.forEach(async (img) => {
-      const imageArr = await tx
-        .insert(images)
-        .values({
-          updatedAt: new Date(),
-          url: img.url,
-          productId,
-        })
-        .returning()
-
-      const [image] = imageArr
-
-      imageResArr.push(image)
-    })
-
-    return {
-      images: imageResArr,
-      ...product,
-    }
+    imageResArr.push(image)
   })
+
+  return {
+    images: imageResArr,
+    ...product,
+  }
 }
 
 export async function getProductsByIds(ids: string[]) {

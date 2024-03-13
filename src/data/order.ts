@@ -24,21 +24,19 @@ export async function initiateOrder(value: {
 }) {
   const { storeId, productIds } = value
 
-  return await db.transaction(async (tx) => {
-    const orderArr = await tx
-      .insert(orders)
-      .values({ storeId, isPaid: false, updatedAt: new Date() })
-      .returning()
+  const orderArr = await db
+    .insert(orders)
+    .values({ storeId, isPaid: false, updatedAt: new Date() })
+    .returning()
 
-    productIds.forEach(async (id) => {
-      await tx
-        .insert(orderItems)
-        .values({ productId: id, orderId: orderArr[0].id })
-    })
-
-    const [order] = orderArr
-    return order
+  productIds.forEach(async (id) => {
+    await db
+      .insert(orderItems)
+      .values({ productId: id, orderId: orderArr[0].id })
   })
+
+  const [order] = orderArr
+  return order
 }
 
 export async function createOrder(value: {
