@@ -4,6 +4,9 @@ import { getColorsByStoreId } from '@/data/color'
 import { getProductById } from '@/data/product'
 import { getSizesByStoreId } from '@/data/size'
 
+// Opt out of caching for all data requests in the route segment
+export const dynamic = 'force-dynamic'
+
 export default async function ProductsPage({
   params,
 }: {
