@@ -9,6 +9,9 @@ import { Separator } from '@/components/ui/separator'
 import { formatter } from '@/utils/helpers'
 import { CreditCard, DollarSign, Package } from 'lucide-react'
 
+// Opt out of caching for all data requests in the route segment
+export const dynamic = 'force-dynamic'
+
 interface DashboardPageProps {
   params: { storeId: string }
 }
