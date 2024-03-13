@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAction } from 'next-safe-action/hooks'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import {
   SignInValidator,
@@ -40,6 +41,9 @@ const SignInPage = () => {
   const { execute, status } = useAction(login, {
     onSuccess(data) {
       if (data?.error) setError(data.error)
+    },
+    onError() {
+      toast.error('Error, something went wrong.')
     },
   })
 

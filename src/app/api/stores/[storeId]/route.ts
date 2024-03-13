@@ -14,7 +14,7 @@ export async function PATCH(
     const validatedFields = StoreSchema.safeParse(body)
 
     if (!validatedFields.success) {
-      return { error: 'Invalid fields' }
+      return new NextResponse('Invalid fields', { status: 400 })
     }
 
     const { session } = await getUserAuth()

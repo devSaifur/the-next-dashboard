@@ -42,7 +42,9 @@ export default function AuthenticationPage() {
   const { execute, status } = useAction(register, {
     onSuccess(data) {
       if (data.error) setError(data.error)
-      if (!data.error) toast.success('Signed up successfully')
+    },
+    onError() {
+      toast.error('Error, something went wrong.')
     },
   })
 

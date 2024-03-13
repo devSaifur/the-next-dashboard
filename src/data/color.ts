@@ -4,7 +4,6 @@ import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { colors } from '@/db/schema'
 import { TColorSchema } from '@/lib/validators/FormValidators'
-import { getFirstObject } from '@/utils/helpers'
 
 export async function getColorById(id: string | null) {
   if (id) {
@@ -27,12 +26,15 @@ export async function createColor(value: TColorSchema, storeId: string) {
     .values({ storeId, updatedAt: new Date(), ...value })
     .returning()
 
-  return getFirstObject(colorArr)
+  const [color] = colorArr
+  return color
 }
 
 export async function deleteColorById(id: string) {
-  const sizeArr = await db.delete(colors).where(eq(colors.id, id)).returning()
-  return getFirstObject(sizeArr)
+  const colorArr = await db.delete(colors).where(eq(colors.id, id)).returning()
+
+  const [color] = colorArr
+  return color
 }
 
 export async function updateColor(values: TColorSchema, colorId: string) {
@@ -41,5 +43,7 @@ export async function updateColor(values: TColorSchema, colorId: string) {
     .set(values)
     .where(eq(colors.id, colorId))
     .returning()
-  return getFirstObject(colorArr)
+
+  const [color] = colorArr
+  return color
 }

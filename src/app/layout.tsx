@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('min-h-screen w-full', GeistSans.className)}>
+      <body
+        className={cn('min-h-screen w-full antialiased', GeistSans.className)}
+      >
         <Toaster />
         <TanstackProvider>
           <ModalProvider />

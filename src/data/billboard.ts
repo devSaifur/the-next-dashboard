@@ -4,7 +4,6 @@ import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { billboards } from '@/db/schema'
 import { TBillboardSchema } from '@/lib/validators/FormValidators'
-import { getFirstObject } from '@/utils/helpers'
 
 export async function getBillboardById(id: string | null) {
   if (id) {
@@ -33,7 +32,9 @@ export async function createBillboard(
       ...values,
     })
     .returning()
-  return getFirstObject(billboardArr)
+
+  const [billboard] = billboardArr
+  return billboard
 }
 
 export async function updateBillboard(
@@ -46,7 +47,8 @@ export async function updateBillboard(
     .where(eq(billboards.id, billboardId))
     .returning()
 
-  return getFirstObject(billboardArr)
+  const [billboard] = billboardArr
+  return billboard
 }
 
 export async function deleteBillboardById(billboardId: string) {
@@ -54,5 +56,7 @@ export async function deleteBillboardById(billboardId: string) {
     .delete(billboards)
     .where(eq(billboards.id, billboardId))
     .returning()
-  return getFirstObject(billboardArr)
+
+  const [billboard] = billboardArr
+  return billboard
 }

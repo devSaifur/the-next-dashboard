@@ -49,7 +49,7 @@ const ImageUpload = ({
                 variant="destructive"
                 size="sm"
               >
-                <Trash className="h-4 w-4" />
+                <Trash className="size-4" />
               </Button>
             </div>
             <Image
@@ -75,7 +75,7 @@ const ImageUpload = ({
               variant="secondary"
               onClick={onClick}
             >
-              <ImagePlus className="mr-2 h-4 w-4" />
+              <ImagePlus className="mr-2 size-4" />
               Upload an Image
             </Button>
           )

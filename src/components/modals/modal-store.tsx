@@ -33,8 +33,8 @@ export const StoreModal = () => {
   const { mutate: createStore, isPending } = useMutation({
     mutationKey: ['stores'],
     mutationFn: async (data: TStoreSchema) => axios.post('/api/stores', data),
-    onSuccess: () => {
-      window.location.reload()
+    onSuccess: (res) => {
+      window.location.href = res.data.id
     },
     onError: () => {
       toast.error('Something went wrong. Please try again.')

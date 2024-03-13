@@ -4,7 +4,6 @@ import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { sizes } from '@/db/schema'
 import { TSizeSchema } from '@/lib/validators/FormValidators'
-import { getFirstObject } from '@/utils/helpers'
 
 export async function getSizeById(id: string | null) {
   if (id) {
@@ -27,12 +26,15 @@ export async function createSize(value: TSizeSchema, storeId: string) {
     .values({ storeId, updatedAt: new Date(), ...value })
     .returning()
 
-  return getFirstObject(sizeArr)
+  const [size] = sizeArr
+  return size
 }
 
 export async function deleteSizeById(id: string) {
   const sizeArr = await db.delete(sizes).where(eq(sizes.id, id)).returning()
-  return getFirstObject(sizeArr)
+
+  const [size] = sizeArr
+  return size
 }
 
 export async function updateSize(values: TSizeSchema, sizeId: string) {
@@ -41,5 +43,7 @@ export async function updateSize(values: TSizeSchema, sizeId: string) {
     .set(values)
     .where(eq(sizes.id, sizeId))
     .returning()
-  return getFirstObject(sizeArr)
+
+  const [size] = sizeArr
+  return size
 }

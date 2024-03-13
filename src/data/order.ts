@@ -2,8 +2,7 @@ import 'server-only'
 import { desc, eq } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { TOrderInsertSchema, orderItems, orders, products } from '@/db/schema'
-import { getFirstObject } from '@/utils/helpers'
+import { orderItems, orders, products } from '@/db/schema'
 
 export async function getOrderByStoreId(storeId: string) {
   return db.query.orders.findMany({
@@ -37,7 +36,8 @@ export async function initiateOrder(value: {
         .values({ productId: id, orderId: orderArr[0].id })
     })
 
-    return getFirstObject(orderArr)
+    const [order] = orderArr
+    return order
   })
 }
 

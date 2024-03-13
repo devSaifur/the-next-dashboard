@@ -2,9 +2,8 @@ import 'server-only'
 import { desc, eq, inArray } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { products, images, TImageSelectSchema, categories } from '@/db/schema'
+import { products, images, TImageSelectSchema } from '@/db/schema'
 import { TProductSchema } from '@/lib/validators/FormValidators'
-import { getFirstObject } from '@/utils/helpers'
 
 export async function getFilteredProducts(filter: any) {
   return await db.query.products.findMany({
@@ -118,9 +117,9 @@ export async function createProduct(
       })
       .returning()
 
-    const product = getFirstObject(productArr)
+    const [product] = productArr
 
-    const productId = product?.id as string
+    const productId = product.id
 
     let imageResArr: TImageSelectSchema[] = []
 
@@ -145,11 +144,13 @@ export async function createProduct(
 }
 
 export async function deleteProductById(productId: string) {
-  const product = await db
+  const productArr = await db
     .delete(products)
     .where(eq(products.id, productId))
     .returning()
-  return getFirstObject(product)
+
+  const [product] = productArr
+  return product
 }
 
 export async function updateProduct(
@@ -184,21 +185,23 @@ export async function updateProduct(
       .where(eq(products.id, productId))
       .returning()
 
-    const product = getFirstObject(productArr)
+    const [product] = productArr
 
     let imageResArr: TImageSelectSchema[] = []
 
-    value.images.forEach(async (image) => {
-      const imageRes = await tx
+    value.images.forEach(async (img) => {
+      const imageArr = await tx
         .insert(images)
         .values({
           updatedAt: new Date(),
-          url: image.url,
+          url: img.url,
           productId,
         })
         .returning()
 
-      imageResArr.push(imageRes[0])
+      const [image] = imageArr
+
+      imageResArr.push(image)
     })
 
     return {

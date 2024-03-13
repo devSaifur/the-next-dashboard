@@ -4,7 +4,6 @@ import { desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { TCategoryInsertSchema, categories } from '@/db/schema'
 import { TCategorySchema } from '@/lib/validators/FormValidators'
-import { getFirstObject } from '@/utils/helpers'
 
 export async function getCategoriesByStoreId(storeId: string) {
   return await db.query.categories.findMany({
@@ -39,8 +38,9 @@ export async function getCategoryById(id: string) {
 }
 
 export async function createCategory(values: TCategoryInsertSchema) {
-  const category = await db.insert(categories).values(values).returning()
-  return getFirstObject(category)
+  const categoryArr = await db.insert(categories).values(values).returning()
+  const [category] = categoryArr
+  return category
 }
 
 export async function updateCategory(
@@ -49,20 +49,24 @@ export async function updateCategory(
 ) {
   const { name, billboardId } = values
 
-  const category = await db
+  const categoryArr = await db
     .update(categories)
     .set({ name, billboardId, updatedAt: new Date() })
     .where(eq(categories.id, categoryId))
     .returning()
-  return getFirstObject(category)
+
+  const [category] = categoryArr
+  return category
 }
 
 export async function deleteCategory(categoryId: string) {
-  const category = await db
+  const categoryArr = await db
     .delete(categories)
     .where(eq(categories.id, categoryId))
     .returning()
-  return getFirstObject(category)
+
+  const [category] = categoryArr
+  return category
 }
 
 export async function getCategories(storeId: string) {
