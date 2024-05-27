@@ -4,6 +4,7 @@ import { Facebook } from 'arctic'
 import { redirect } from 'next/navigation'
 import { validateRequest } from './auth'
 import { env } from '@/lib/env'
+import { cache } from 'react'
 
 export type AuthSession = {
   session: {
@@ -14,7 +15,7 @@ export type AuthSession = {
     }
   } | null
 }
-export const getUserAuth = async (): Promise<AuthSession> => {
+export const getUserAuth = cache(async (): Promise<AuthSession> => {
   const { session, user } = await validateRequest()
   if (!session) return { session: null }
   return {
@@ -26,12 +27,12 @@ export const getUserAuth = async (): Promise<AuthSession> => {
       },
     },
   }
-}
+})
 
-export const checkAuth = async () => {
+export const checkAuth = cache(async () => {
   const { session } = await validateRequest()
   if (!session) redirect('/sign-in')
-}
+})
 
 export const facebook = new Facebook(
   env.FACEBOOK_CLIENT_ID,
