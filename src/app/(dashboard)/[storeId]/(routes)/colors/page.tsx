@@ -4,9 +4,6 @@ import { ColorClient } from '@/components/colors/color-client'
 import type { ColorColumn } from '@/components/colors/color-columns'
 import { getColorsByStoreId } from '@/data/color'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function ColorsPage({
   params,
 }: {

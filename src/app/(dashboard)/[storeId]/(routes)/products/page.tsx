@@ -5,9 +5,6 @@ import type { ProductColumn } from '@/components/products/product-columns'
 import { getProductsByStoreId } from '@/data/product'
 import { formatter } from '@/utils/helpers'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function ProductsPage({
   params,
 }: {

@@ -1,7 +1,9 @@
 import 'server-only'
 
+import { Facebook } from 'arctic'
 import { redirect } from 'next/navigation'
 import { validateRequest } from './auth'
+import { env } from '@/lib/env'
 
 export type AuthSession = {
   session: {
@@ -30,3 +32,9 @@ export const checkAuth = async () => {
   const { session } = await validateRequest()
   if (!session) redirect('/sign-in')
 }
+
+export const facebook = new Facebook(
+  env.FACEBOOK_CLIENT_ID,
+  env.FACEBOOK_CLIENT_SECRET,
+  'http://loaclhost:3000'
+)

@@ -2,9 +2,6 @@ import { CategoryForm } from '@/components/categories/category-form'
 import { getBillboardsByStoreId } from '@/data/billboard'
 import { getCategoriesById } from '@/data/category'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function CategoryPage({
   params,
 }: {

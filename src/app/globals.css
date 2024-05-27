@@ -70,6 +70,14 @@ p {
   text-wrap: pretty;
 }
 
+*,
+*::before,
+*::after,
+html,
+body {
+  scrollbar-gutter: stable;
+}
+
 @layer base {
   * {
     @apply border-border;

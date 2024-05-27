@@ -4,9 +4,6 @@ import { CategoryClient } from '@/components/categories/category-client'
 import type { CategoryColumn } from '@/components/categories/category-columns'
 import { getCategoriesByStoreId } from '@/data/category'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function CategoriesPage({
   params,
 }: {

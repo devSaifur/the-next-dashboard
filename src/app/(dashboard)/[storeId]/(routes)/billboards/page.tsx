@@ -4,9 +4,6 @@ import { BillboardClient } from '@/components/billboards/billboard-client'
 import type { BillboardColumn } from '@/components/billboards/billboard-columns'
 import { getBillboardsByStoreId } from '@/data/billboard'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function BillboardsPage({
   params,
 }: {

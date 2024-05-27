@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Axe, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { toast } from 'sonner'
 import axios, { isAxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'

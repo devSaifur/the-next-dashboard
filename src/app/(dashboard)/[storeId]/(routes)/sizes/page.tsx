@@ -4,9 +4,6 @@ import { SizeClient } from '@/components/sizes/size-client'
 import type { SizeColumn } from '@/components/sizes/size-columns'
 import { getSizesByStoreId } from '@/data/size'
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
-
 export default async function SizesPage({
   params,
 }: {
