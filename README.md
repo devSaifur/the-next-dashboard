@@ -11,6 +11,7 @@ Checkout the storefront repository: https://github.com/devSaifur/the-next-store
 - **Framework:** [Next.js](https://nextjs.org)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com)
 - **Basic Authentication:** [Lucia](https://lucia-auth.com/)
+- **Database:** [Neon Postgres](https://neon.tech/)
 - **ORM:** [Drizzle ORM](https://orm.drizzle.team)
 - **UI Components:** [shadcn/ui](https://ui.shadcn.com)
 - **Image Uploads:** [Cloudinary](https://cloudinary.com/)
