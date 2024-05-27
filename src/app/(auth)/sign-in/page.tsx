@@ -31,8 +31,8 @@ const SignInPage = () => {
   const form = useForm<TSignInValidator>({
     resolver: zodResolver(SignInValidator),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'test@email.com',
+      password: '123456',
     },
   })
 
