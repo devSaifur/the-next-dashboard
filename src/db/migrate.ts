@@ -1,12 +1,12 @@
 import { drizzle } from 'drizzle-orm/neon-http'
 import { migrate } from 'drizzle-orm/neon-http/migrator'
-import { type NeonQueryFunction, neon } from '@neondatabase/serverless'
+import { neon } from '@neondatabase/serverless'
 
 import { env } from '@/lib/env'
 
 const sql = neon(env.DATABASE_URL)
 
-const db = drizzle(sql as NeonQueryFunction<boolean, boolean>)
+const db = drizzle(sql)
 
 const main = async () => {
   try {

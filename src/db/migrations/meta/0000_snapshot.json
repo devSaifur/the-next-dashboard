@@ -1,10 +1,10 @@
 {
-  "id": "903bdbad-ae10-4e1a-b9e2-1b94e9c11c79",
+  "id": "d602bede-8869-47f5-aefc-6bc8c645a7b7",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "billboard": {
+    "public.billboard": {
       "name": "billboard",
       "schema": "",
       "columns": {
@@ -74,7 +74,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "category": {
+    "public.category": {
       "name": "category",
       "schema": "",
       "columns": {
@@ -164,7 +164,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "color": {
+    "public.color": {
       "name": "color",
       "schema": "",
       "columns": {
@@ -234,7 +234,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "image": {
+    "public.image": {
       "name": "image",
       "schema": "",
       "columns": {
@@ -298,7 +298,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "order_item": {
+    "public.order_item": {
       "name": "order_item",
       "schema": "",
       "columns": {
@@ -369,7 +369,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "order": {
+    "public.order": {
       "name": "order",
       "schema": "",
       "columns": {
@@ -446,7 +446,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "product": {
+    "public.product": {
       "name": "product",
       "schema": "",
       "columns": {
@@ -608,7 +608,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "session": {
+    "public.session": {
       "name": "session",
       "schema": "",
       "columns": {
@@ -650,7 +650,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "size": {
+    "public.size": {
       "name": "size",
       "schema": "",
       "columns": {
@@ -720,7 +720,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "store": {
+    "public.store": {
       "name": "store",
       "schema": "",
       "columns": {
@@ -776,7 +776,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
