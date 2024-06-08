@@ -1,23 +1,27 @@
 import { relations } from 'drizzle-orm'
 import {
   timestamp,
-  pgTable,
   text,
   varchar,
   uuid,
   decimal,
   boolean,
   index,
+  pgTableCreator,
 } from 'drizzle-orm/pg-core'
 
-export const users = pgTable('user', {
+export const createTable = pgTableCreator(
+  (name) => `the-next-dashboard_${name}`
+)
+
+export const users = createTable('user', {
   id: text('id').primaryKey(),
   name: varchar('name', { length: 255 }),
   email: varchar('email', { length: 255 }),
   password: text('password'),
 })
 
-export const session = pgTable('session', {
+export const session = createTable('session', {
   id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
@@ -28,7 +32,7 @@ export const session = pgTable('session', {
   }).notNull(),
 })
 
-export const stores = pgTable('store', {
+export const stores = createTable('store', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   userId: text('userId')
@@ -54,7 +58,7 @@ export const storesRelations = relations(stores, ({ many }) => ({
 
 export type TStoreInsertSchema = typeof stores.$inferInsert
 
-export const billboards = pgTable(
+export const billboards = createTable(
   'billboard',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -86,7 +90,7 @@ export const billboardsRelations = relations(billboards, ({ one, many }) => ({
 export type TBillboardInsertSchema = typeof billboards.$inferInsert
 export type TBillboardSelectSchema = typeof billboards.$inferSelect
 
-export const categories = pgTable(
+export const categories = createTable(
   'category',
   {
     id: uuid('id').defaultRandom().notNull().primaryKey(),
@@ -129,7 +133,7 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
 export type TCategorySelectSchema = typeof categories.$inferSelect
 export type TCategoryInsertSchema = typeof categories.$inferInsert
 
-export const sizes = pgTable(
+export const sizes = createTable(
   'size',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -158,7 +162,7 @@ export const sizesRelation = relations(sizes, ({ one, many }) => ({
 
 export type TSizeSelectSchema = typeof sizes.$inferSelect
 
-export const colors = pgTable(
+export const colors = createTable(
   'color',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -187,7 +191,7 @@ export const colorsRelation = relations(colors, ({ one, many }) => ({
 
 export type TColorSelectSchema = typeof colors.$inferSelect
 
-export const products = pgTable(
+export const products = createTable(
   'product',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -246,7 +250,7 @@ export const productsRelation = relations(products, ({ many, one }) => ({
 export type TProductSelectSchema = typeof products.$inferSelect
 export type TProductInsertSchema = typeof products.$inferInsert
 
-export const images = pgTable(
+export const images = createTable(
   'image',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -274,7 +278,7 @@ export const imagesRelation = relations(images, ({ one }) => ({
 export type TImageSelectSchema = typeof images.$inferSelect
 export type TImageInsertSchema = typeof images.$inferInsert
 
-export const orders = pgTable(
+export const orders = createTable(
   'order',
   {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -304,7 +308,7 @@ export const ordersRelation = relations(orders, ({ one, many }) => ({
 
 export type TOrderInsertSchema = typeof orders.$inferInsert
 
-export const orderItems = pgTable(
+export const orderItems = createTable(
   'order_item',
   {
     id: uuid('id').defaultRandom().primaryKey(),

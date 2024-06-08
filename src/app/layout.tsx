@@ -22,7 +22,7 @@ export default function RootLayout({
       <body
         className={cn('min-h-screen w-full antialiased', GeistSans.className)}
       >
-        <Toaster />
+        <Toaster richColors />
         <TanstackProvider>
           <ModalProvider />
           <ThemeProvider attribute="class" defaultTheme="system">

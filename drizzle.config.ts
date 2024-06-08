@@ -7,6 +7,6 @@ export default defineConfig({
   dialect: 'postgresql',
   verbose: true,
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: env.POSTGRES_URL,
   },
 })

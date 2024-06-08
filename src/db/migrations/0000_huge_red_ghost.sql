@@ -183,16 +183,16 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_billboards_store_id" ON "billboard" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_categories_billboard_id" ON "category" ("billboard_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_categories_store_id" ON "category" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_colors_store_id" ON "color" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_images_product_id" ON "image" ("product_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_order_item_order_id" ON "order_item" ("order_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_order_item_product_id" ON "order_item" ("product_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_orders_store_id" ON "order" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_products_store_id" ON "product" ("store_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_products_category_id" ON "product" ("category_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_products_size_id" ON "product" ("size_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_products_color_id" ON "product" ("color_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "idx_sizes_store_id" ON "size" ("store_id");
+CREATE INDEX IF NOT EXISTS "idx_billboards_store_id" ON "billboard" USING btree ("store_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_categories_billboard_id" ON "category" USING btree ("billboard_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_categories_store_id" ON "category" USING btree ("store_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_colors_store_id" ON "color" USING btree ("store_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_images_product_id" ON "image" USING btree ("product_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_order_item_order_id" ON "order_item" USING btree ("order_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_order_item_product_id" ON "order_item" USING btree ("product_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_orders_store_id" ON "order" USING btree ("store_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_products_store_id" ON "product" USING btree ("store_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_products_category_id" ON "product" USING btree ("category_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_products_size_id" ON "product" USING btree ("size_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_products_color_id" ON "product" USING btree ("color_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_sizes_store_id" ON "size" USING btree ("store_id");

@@ -6,7 +6,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
-    DATABASE_URL: z.string().url(),
+    POSTGRES_URL: z.string().url(),
     STRIPE_API_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     FRONTEND_STORE_URL: z.string().url(),
@@ -14,8 +14,13 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1),
   },
-  experimental__runtimeEnv: {
+  runtimeEnv: {
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:
       process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    POSTGRES_URL: process.env.POSTGRES_URL,
+    STRIPE_API_KEY: process.env.STRIPE_API_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    FRONTEND_STORE_URL: process.env.FRONTEND_STORE_URL,
+    NODE_ENV: process.env.NODE_ENV,
   },
 })
