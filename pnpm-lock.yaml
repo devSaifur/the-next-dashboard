@@ -114,8 +114,8 @@ importers:
         specifier: ^7.51.5
         version: 7.51.5(react@18.3.1)
       recharts:
-        specifier: 2.13.0-alpha.2
-        version: 2.13.0-alpha.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.13.0-alpha.4
+        version: 2.13.0-alpha.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -3227,8 +3227,8 @@ packages:
   recharts-scale@0.4.5:
     resolution: {integrity: sha512-kivNFO+0OcUNu7jQquLXAxz1FIwZj8nrj+YkOKc5694NbjCvcT6aSZiIzNzd2Kul4o4rTto8QVR9lMNtxD4G1w==}
 
-  recharts@2.13.0-alpha.2:
-    resolution: {integrity: sha512-RlJys5Poja2PH7IAxECF2fwe+DYqBycDJQIPZTftmvtKOZJRB+WZT514f0Ji700imV0wh0qUlQCwcbO1kuM8ZA==}
+  recharts@2.13.0-alpha.4:
+    resolution: {integrity: sha512-K9naL6F7pEcDYJE6yFQASSCQecSLPP0JagnvQ9hPtA/aHgsxsnIOjouLP5yrFZehxzfCkV5TEORr7/uNtSr7Qw==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
@@ -6503,7 +6503,7 @@ snapshots:
     dependencies:
       decimal.js-light: 2.5.1
 
-  recharts@2.13.0-alpha.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  recharts@2.13.0-alpha.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       clsx: 2.1.1
       eventemitter3: 4.0.7

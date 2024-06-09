@@ -26,10 +26,6 @@ const ImageUpload = ({
     setIsMounted(true)
   }, [])
 
-  const onUpload = (result: any) => {
-    onChange(result.info.secure_url)
-  }
-
   if (!isMounted) {
     return null
   }
@@ -62,12 +58,18 @@ const ImageUpload = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget onSuccess={onUpload} uploadPreset="t5xh5nif">
+      <CldUploadWidget
+        onSuccess={(result, { widget }) => {
+          // @ts-ignore
+          onChange(result.info.secure_url)
+          widget.close()
+        }}
+        uploadPreset="t5xh5nif"
+      >
         {({ open }) => {
           const onClick = () => {
             open()
           }
-
           return (
             <Button
               type="button"
