@@ -4,6 +4,8 @@ import { ProductClient } from '@/components/products/product-client'
 import type { ProductColumn } from '@/components/products/product-columns'
 import { getProductsByStoreId } from '@/data/product'
 import { formatter } from '@/utils/helpers'
+import { Suspense } from 'react'
+import SkeletonMod from '@/components/skeleton-mod'
 
 export default async function ProductsPage({
   params,
@@ -29,7 +31,16 @@ export default async function ProductsPage({
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ProductClient data={formattedProducts} />
+        <Suspense
+          fallback={
+            <SkeletonMod
+              tile="Products"
+              description="Manage products for your store"
+            />
+          }
+        >
+          <ProductClient data={formattedProducts} />
+        </Suspense>
       </div>
     </div>
   )

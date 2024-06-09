@@ -3,6 +3,8 @@ import { format } from 'date-fns'
 import { ColorClient } from '@/components/colors/color-client'
 import type { ColorColumn } from '@/components/colors/color-columns'
 import { getColorsByStoreId } from '@/data/color'
+import { Suspense } from 'react'
+import SkeletonMod from '@/components/skeleton-mod'
 
 export default async function ColorsPage({
   params,
@@ -23,7 +25,16 @@ export default async function ColorsPage({
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ColorClient data={formattedColors} />
+        <Suspense
+          fallback={
+            <SkeletonMod
+              tile="Colors"
+              description="Manage colors for your store"
+            />
+          }
+        >
+          <ColorClient data={formattedColors} />
+        </Suspense>
       </div>
     </div>
   )

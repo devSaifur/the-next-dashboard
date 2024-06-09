@@ -3,6 +3,8 @@ import { format } from 'date-fns'
 import { CategoryClient } from '@/components/categories/category-client'
 import type { CategoryColumn } from '@/components/categories/category-columns'
 import { getCategoriesByStoreId } from '@/data/category'
+import { Suspense } from 'react'
+import SkeletonMod from '@/components/skeleton-mod'
 
 export default async function CategoriesPage({
   params,
@@ -21,7 +23,16 @@ export default async function CategoriesPage({
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <CategoryClient data={formattedCategories} />
+        <Suspense
+          fallback={
+            <SkeletonMod
+              tile="Categories"
+              description="Manage categories for your store"
+            />
+          }
+        >
+          <CategoryClient data={formattedCategories} />
+        </Suspense>
       </div>
     </div>
   )
