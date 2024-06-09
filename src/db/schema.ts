@@ -10,9 +10,7 @@ import {
   pgTableCreator,
 } from 'drizzle-orm/pg-core'
 
-export const createTable = pgTableCreator(
-  (name) => `the-next-dashboard_${name}`
-)
+export const createTable = pgTableCreator((name) => `TND_${name}`)
 
 export const users = createTable('user', {
   id: text('id').primaryKey(),

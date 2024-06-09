@@ -13,7 +13,7 @@ const main = async () => {
 
     const end = Date.now()
 
-    console.log(`✅ Migrations completed in ${end - start}ms`)
+    console.log(`✅ Migrations completed in ${(end - start) / 1000}s`)
 
     process.exit(0)
   } catch (error) {

@@ -1,11 +1,11 @@
 {
-  "id": "79bad4a1-142c-4b34-b018-0edecd0783b8",
+  "id": "fcfc7bf6-c23d-4b8f-8045-65f5e75671e7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.billboard": {
-      "name": "billboard",
+    "public.TND_billboard": {
+      "name": "TND_billboard",
       "schema": "",
       "columns": {
         "id": {
@@ -65,10 +65,10 @@
         }
       },
       "foreignKeys": {
-        "billboard_store_id_store_id_fk": {
-          "name": "billboard_store_id_store_id_fk",
-          "tableFrom": "billboard",
-          "tableTo": "store",
+        "TND_billboard_store_id_TND_store_id_fk": {
+          "name": "TND_billboard_store_id_TND_store_id_fk",
+          "tableFrom": "TND_billboard",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -82,8 +82,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.category": {
-      "name": "category",
+    "public.TND_category": {
+      "name": "TND_category",
       "schema": "",
       "columns": {
         "id": {
@@ -158,10 +158,10 @@
         }
       },
       "foreignKeys": {
-        "category_store_id_store_id_fk": {
-          "name": "category_store_id_store_id_fk",
-          "tableFrom": "category",
-          "tableTo": "store",
+        "TND_category_store_id_TND_store_id_fk": {
+          "name": "TND_category_store_id_TND_store_id_fk",
+          "tableFrom": "TND_category",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -171,10 +171,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "category_billboard_id_billboard_id_fk": {
-          "name": "category_billboard_id_billboard_id_fk",
-          "tableFrom": "category",
-          "tableTo": "billboard",
+        "TND_category_billboard_id_TND_billboard_id_fk": {
+          "name": "TND_category_billboard_id_TND_billboard_id_fk",
+          "tableFrom": "TND_category",
+          "tableTo": "TND_billboard",
           "columnsFrom": [
             "billboard_id"
           ],
@@ -188,8 +188,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.color": {
-      "name": "color",
+    "public.TND_color": {
+      "name": "TND_color",
       "schema": "",
       "columns": {
         "id": {
@@ -249,10 +249,10 @@
         }
       },
       "foreignKeys": {
-        "color_store_id_store_id_fk": {
-          "name": "color_store_id_store_id_fk",
-          "tableFrom": "color",
-          "tableTo": "store",
+        "TND_color_store_id_TND_store_id_fk": {
+          "name": "TND_color_store_id_TND_store_id_fk",
+          "tableFrom": "TND_color",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -266,8 +266,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.image": {
-      "name": "image",
+    "public.TND_image": {
+      "name": "TND_image",
       "schema": "",
       "columns": {
         "id": {
@@ -321,10 +321,10 @@
         }
       },
       "foreignKeys": {
-        "image_product_id_product_id_fk": {
-          "name": "image_product_id_product_id_fk",
-          "tableFrom": "image",
-          "tableTo": "product",
+        "TND_image_product_id_TND_product_id_fk": {
+          "name": "TND_image_product_id_TND_product_id_fk",
+          "tableFrom": "TND_image",
+          "tableTo": "TND_product",
           "columnsFrom": [
             "product_id"
           ],
@@ -338,8 +338,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.order_item": {
-      "name": "order_item",
+    "public.TND_order_item": {
+      "name": "TND_order_item",
       "schema": "",
       "columns": {
         "id": {
@@ -395,10 +395,10 @@
         }
       },
       "foreignKeys": {
-        "order_item_order_id_order_id_fk": {
-          "name": "order_item_order_id_order_id_fk",
-          "tableFrom": "order_item",
-          "tableTo": "order",
+        "TND_order_item_order_id_TND_order_id_fk": {
+          "name": "TND_order_item_order_id_TND_order_id_fk",
+          "tableFrom": "TND_order_item",
+          "tableTo": "TND_order",
           "columnsFrom": [
             "order_id"
           ],
@@ -408,10 +408,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "order_item_product_id_product_id_fk": {
-          "name": "order_item_product_id_product_id_fk",
-          "tableFrom": "order_item",
-          "tableTo": "product",
+        "TND_order_item_product_id_TND_product_id_fk": {
+          "name": "TND_order_item_product_id_TND_product_id_fk",
+          "tableFrom": "TND_order_item",
+          "tableTo": "TND_product",
           "columnsFrom": [
             "product_id"
           ],
@@ -425,8 +425,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.order": {
-      "name": "order",
+    "public.TND_order": {
+      "name": "TND_order",
       "schema": "",
       "columns": {
         "id": {
@@ -493,10 +493,10 @@
         }
       },
       "foreignKeys": {
-        "order_store_id_store_id_fk": {
-          "name": "order_store_id_store_id_fk",
-          "tableFrom": "order",
-          "tableTo": "store",
+        "TND_order_store_id_TND_store_id_fk": {
+          "name": "TND_order_store_id_TND_store_id_fk",
+          "tableFrom": "TND_order",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -510,8 +510,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.product": {
-      "name": "product",
+    "public.TND_product": {
+      "name": "TND_product",
       "schema": "",
       "columns": {
         "id": {
@@ -648,10 +648,10 @@
         }
       },
       "foreignKeys": {
-        "product_store_id_store_id_fk": {
-          "name": "product_store_id_store_id_fk",
-          "tableFrom": "product",
-          "tableTo": "store",
+        "TND_product_store_id_TND_store_id_fk": {
+          "name": "TND_product_store_id_TND_store_id_fk",
+          "tableFrom": "TND_product",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -661,10 +661,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "product_category_id_category_id_fk": {
-          "name": "product_category_id_category_id_fk",
-          "tableFrom": "product",
-          "tableTo": "category",
+        "TND_product_category_id_TND_category_id_fk": {
+          "name": "TND_product_category_id_TND_category_id_fk",
+          "tableFrom": "TND_product",
+          "tableTo": "TND_category",
           "columnsFrom": [
             "category_id"
           ],
@@ -674,10 +674,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "product_size_id_size_id_fk": {
-          "name": "product_size_id_size_id_fk",
-          "tableFrom": "product",
-          "tableTo": "size",
+        "TND_product_size_id_TND_size_id_fk": {
+          "name": "TND_product_size_id_TND_size_id_fk",
+          "tableFrom": "TND_product",
+          "tableTo": "TND_size",
           "columnsFrom": [
             "size_id"
           ],
@@ -687,10 +687,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "product_color_id_color_id_fk": {
-          "name": "product_color_id_color_id_fk",
-          "tableFrom": "product",
-          "tableTo": "color",
+        "TND_product_color_id_TND_color_id_fk": {
+          "name": "TND_product_color_id_TND_color_id_fk",
+          "tableFrom": "TND_product",
+          "tableTo": "TND_color",
           "columnsFrom": [
             "color_id"
           ],
@@ -704,8 +704,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.session": {
-      "name": "session",
+    "public.TND_session": {
+      "name": "TND_session",
       "schema": "",
       "columns": {
         "id": {
@@ -729,10 +729,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_user_id_user_id_fk": {
-          "name": "session_user_id_user_id_fk",
-          "tableFrom": "session",
-          "tableTo": "user",
+        "TND_session_user_id_TND_user_id_fk": {
+          "name": "TND_session_user_id_TND_user_id_fk",
+          "tableFrom": "TND_session",
+          "tableTo": "TND_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -746,8 +746,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.size": {
-      "name": "size",
+    "public.TND_size": {
+      "name": "TND_size",
       "schema": "",
       "columns": {
         "id": {
@@ -807,10 +807,10 @@
         }
       },
       "foreignKeys": {
-        "size_store_id_store_id_fk": {
-          "name": "size_store_id_store_id_fk",
-          "tableFrom": "size",
-          "tableTo": "store",
+        "TND_size_store_id_TND_store_id_fk": {
+          "name": "TND_size_store_id_TND_store_id_fk",
+          "tableFrom": "TND_size",
+          "tableTo": "TND_store",
           "columnsFrom": [
             "store_id"
           ],
@@ -824,8 +824,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.store": {
-      "name": "store",
+    "public.TND_store": {
+      "name": "TND_store",
       "schema": "",
       "columns": {
         "id": {
@@ -863,10 +863,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "store_userId_user_id_fk": {
-          "name": "store_userId_user_id_fk",
-          "tableFrom": "store",
-          "tableTo": "user",
+        "TND_store_userId_TND_user_id_fk": {
+          "name": "TND_store_userId_TND_user_id_fk",
+          "tableFrom": "TND_store",
+          "tableTo": "TND_user",
           "columnsFrom": [
             "userId"
           ],
@@ -880,8 +880,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.user": {
-      "name": "user",
+    "public.TND_user": {
+      "name": "TND_user",
       "schema": "",
       "columns": {
         "id": {
