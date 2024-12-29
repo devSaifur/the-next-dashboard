@@ -24,6 +24,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { Icons } from '@/components/icons'
 
 export default function AuthenticationPage() {
   const [error, setError] = useState('')
@@ -129,7 +130,11 @@ export default function AuthenticationPage() {
           <FormActionError message={error} />
 
           <Button type="submit" disabled={isPending} className="w-full">
-            Sign up with email
+            {isPending ? (
+              <Icons.spinner className="h-4 w-4 animate-spin" />
+            ) : (
+              'Sign up'
+            )}
           </Button>
         </form>
       </Form>

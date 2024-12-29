@@ -7,12 +7,12 @@ export const env = createEnv({
       .enum(['development', 'test', 'production'])
       .default('development'),
     POSTGRES_URL: z.string().url(),
-    STRIPE_API_KEY: z.string().min(1),
-    STRIPE_WEBHOOK_SECRET: z.string().min(1),
+    STRIPE_API_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
     FRONTEND_STORE_URL: z.string().url(),
   },
   client: {
-    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().min(1),
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:

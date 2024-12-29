@@ -108,8 +108,11 @@ const SignInPage = () => {
           <FormActionError message={error} />
 
           <Button type="submit" disabled={isPending} className="w-full">
-            {isPending && <Icons.spinner className="h-4 w-4 animate-spin" />}
-            Sign in to your account
+            {isPending ? (
+              <Icons.spinner className="h-4 w-4 animate-spin" />
+            ) : (
+              'Sign in to your account'
+            )}
           </Button>
         </form>
       </Form>
